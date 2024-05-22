@@ -1,3 +1,4 @@
-# Lab_Requirements_Management
-Frontend: Next.js(app router)
-Backend: Express.js
+# Lab Requirements Management
+
+- Frontend: Next.js (App Router)
+- Backend: Express.js
