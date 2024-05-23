@@ -1,5 +1,5 @@
 import OrderCreator from '@/components/OrderCreator';
-import OrderTable from '@/components/OrderTable';
+import TableWithModal from '@/components/TableWithModal';
 import { Order } from '@/types';
 
 export default async function AdminPage() {
@@ -13,7 +13,7 @@ export default async function AdminPage() {
           <h1 className="text-3xl font-bold">委託單列表</h1>
           <OrderCreator />
         </div>
-        <OrderTable orders={data} />
+        <TableWithModal orders={data} />
       </div>
     </div>
   );
