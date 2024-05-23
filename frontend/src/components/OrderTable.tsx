@@ -35,7 +35,7 @@ export default function OrderTable({ orders }: { orders: Order[] }) {
       >
         <TableHeader>
           <TableColumn>Title</TableColumn>
-          <TableColumn>Creator</TableColumn>
+          <TableColumn>Admin</TableColumn>
           <TableColumn>Lab ID</TableColumn>
           <TableColumn>Priority</TableColumn>
           <TableColumn>Status</TableColumn>
@@ -44,8 +44,8 @@ export default function OrderTable({ orders }: { orders: Order[] }) {
           {orders.map((order) => (
             <TableRow key={order.id}>
               <TableCell>{order.title}</TableCell>
-              <TableCell>{order.creator}</TableCell>
-              <TableCell>{order.lab_id}</TableCell>
+              <TableCell>{order.admin.name}</TableCell>
+              <TableCell>{order.lab?.name}</TableCell>
               <TableCell>{order.priority}</TableCell>
               <TableCell>
                 <Chip
