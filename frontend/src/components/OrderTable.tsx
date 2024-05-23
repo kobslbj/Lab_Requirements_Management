@@ -36,7 +36,7 @@ export default function OrderTable({ orders }: { orders: Order[] }) {
         <TableHeader>
           <TableColumn>Title</TableColumn>
           <TableColumn>Admin</TableColumn>
-          <TableColumn>Lab ID</TableColumn>
+          <TableColumn>Lab</TableColumn>
           <TableColumn>Priority</TableColumn>
           <TableColumn>Status</TableColumn>
         </TableHeader>
