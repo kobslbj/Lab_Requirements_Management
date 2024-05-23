@@ -11,6 +11,7 @@ import { Divider } from '@nextui-org/react';
 import { Fab, ID, Lab, Priority, Status } from '../Icons';
 import StatusChip from './StatusChip';
 import PriorityChip from './PriorityChip';
+import Property from './Property';
 
 export default function RowModal({
   activeOrder,
@@ -26,47 +27,27 @@ export default function RowModal({
   return (
     <Modal size="lg" isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
-        <ModalHeader className="text-xl">{activeOrder?.title}</ModalHeader>
+        <ModalHeader className="text-xl">{activeOrder.title}</ModalHeader>
         <ModalBody>
-          <div className="flex flex-col gap-2 text-sm">
-            <div className="flex items-center">
-              <div className="flex min-w-28 items-center gap-2">
-                <ID />
-                單號
-              </div>
-              <div>{activeOrder?.id}</div>
-            </div>
-            <div className="flex items-center">
-              <div className="flex min-w-28 items-center gap-2">
-                <Fab />
-                廠區
-              </div>
-              {activeOrder?.fab?.name ?? 'Empty'}
-            </div>
-            <div className="flex items-center">
-              <div className="flex min-w-28 items-center gap-2">
-                <Lab />
-                實驗室
-              </div>
-              {activeOrder?.lab?.name ?? 'Empty'}
-            </div>
-            <div className="flex items-center">
-              <div className="flex min-w-28 items-center gap-2">
-                <Status />
-                狀態
-              </div>
+          <div className="flex flex-col text-sm">
+            <Property name={<><ID />單號</>}>
+              {activeOrder.id}
+            </Property>
+            <Property name={<><Fab />廠區</>}>
+              {activeOrder.fab?.name ?? 'Empty'}
+            </Property>
+            <Property name={<><Lab />實驗室</>}>
+              {activeOrder.lab?.name ?? 'Empty'}
+            </Property>
+            <Property name={<><Status />狀態</>}>
               <StatusChip order={activeOrder} />
-            </div>
-            <div className="flex items-center">
-              <div className="flex min-w-28 items-center gap-2">
-                <Priority />
-                優先序
-              </div>
+            </Property>
+            <Property name={<><Priority />優先序</>}>
               <PriorityChip order={activeOrder} />
-            </div>
+            </Property>
           </div>
           <Divider />
-          {activeOrder?.description}
+          {activeOrder.description}
         </ModalBody>
         <ModalFooter>
           <Button radius="sm" className="bg-black text-white">
