@@ -1,4 +1,4 @@
-import OrderList from '@/components/OrderList';
+import OrderTable from '@/components/OrderList';
 import { Order } from '@/types';
 
 export default async function Home() {
@@ -9,7 +9,7 @@ export default async function Home() {
     <div className="flex h-screen flex-col items-center justify-center p-10">
       <div className="flex flex-col gap-5">
         <h1 className="text-3xl font-bold">Orders</h1>
-        <OrderList orders={data} />
+        <OrderTable orders={data} />
       </div>
     </div>
   );
