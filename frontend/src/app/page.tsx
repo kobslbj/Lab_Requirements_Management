@@ -1,4 +1,4 @@
-import OrderTable from '@/components/OrderList';
+import OrderTable from '@/components/OrderTable';
 import { Order } from '@/types';
 
 export default async function Home() {
