@@ -10,21 +10,13 @@ import {
   TableRow,
   TableCell,
 } from '@nextui-org/table';
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from '@nextui-org/modal';
 import { useDisclosure } from '@nextui-org/use-disclosure';
-import { Button } from '@nextui-org/react';
-import { Key, useState } from 'react';
+import { useState } from 'react';
+import RowModal from './RowModal';
 
 export default function OrderTable({ orders }: { orders: Order[] }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [activeOrderId, setActiveOrderId] = useState<Key | null>(null);
-  const activeOrder = orders.find((order) => order.id === activeOrderId);
+  const [activeOrder, setActiveOrder] = useState<Order | undefined>();
 
   return (
     <>
@@ -33,7 +25,8 @@ export default function OrderTable({ orders }: { orders: Order[] }) {
         isHeaderSticky
         className="h-[80vh]"
         onRowAction={(id) => {
-          setActiveOrderId(id);
+          const order = orders.find((o) => o.id === id);
+          setActiveOrder(order);
           onOpen();
         }}
         classNames={{
@@ -67,19 +60,11 @@ export default function OrderTable({ orders }: { orders: Order[] }) {
           ))}
         </TableBody>
       </Table>
-      <Modal size="lg" isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
-            {activeOrder?.title}
-          </ModalHeader>
-          <ModalBody>{activeOrder?.description}</ModalBody>
-          <ModalFooter>
-            <Button color="danger" radius="sm">
-              Delete
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <RowModal
+        activeOrder={activeOrder}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      />
     </>
   );
 }
