@@ -8,8 +8,9 @@ import {
 } from '@nextui-org/modal';
 import { Order } from '@/types';
 import { Divider } from '@nextui-org/react';
-import { ID, Lab, Priority, Status } from '../Icons';
+import { Fab, ID, Lab, Priority, Status } from '../Icons';
 import StatusChip from './StatusChip';
+import PriorityChip from './PriorityChip';
 
 export default function RowModal({
   activeOrder,
@@ -25,38 +26,43 @@ export default function RowModal({
   return (
     <Modal size="lg" isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
-        <ModalHeader className="flex flex-col gap-1 text-xl">
-          {activeOrder?.title}
-        </ModalHeader>
+        <ModalHeader className="text-xl">{activeOrder?.title}</ModalHeader>
         <ModalBody>
           <div className="flex flex-col gap-2 text-sm">
             <div className="flex items-center">
               <div className="flex min-w-28 items-center gap-2">
                 <ID />
-                Order ID
+                單號
               </div>
               <div>{activeOrder?.id}</div>
             </div>
             <div className="flex items-center">
               <div className="flex min-w-28 items-center gap-2">
+                <Fab />
+                廠區
+              </div>
+              {activeOrder?.fab?.name ?? 'Empty'}
+            </div>
+            <div className="flex items-center">
+              <div className="flex min-w-28 items-center gap-2">
                 <Lab />
-                Lab
+                實驗室
               </div>
               {activeOrder?.lab?.name ?? 'Empty'}
             </div>
             <div className="flex items-center">
               <div className="flex min-w-28 items-center gap-2">
                 <Status />
-                Status
+                狀態
               </div>
               <StatusChip order={activeOrder} />
             </div>
             <div className="flex items-center">
               <div className="flex min-w-28 items-center gap-2">
                 <Priority />
-                Priority
+                優先序
               </div>
-              {activeOrder?.priority}
+              <PriorityChip order={activeOrder} />
             </div>
           </div>
           <Divider />
@@ -64,7 +70,7 @@ export default function RowModal({
         </ModalBody>
         <ModalFooter>
           <Button radius="sm" className="bg-black text-white">
-            Edit
+            編輯
           </Button>
         </ModalFooter>
       </ModalContent>

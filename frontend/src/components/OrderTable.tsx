@@ -13,6 +13,7 @@ import { useDisclosure } from '@nextui-org/use-disclosure';
 import { useState } from 'react';
 import RowModal from './RowModal';
 import StatusChip from './RowModal/StatusChip';
+import PriorityChip from './RowModal/PriorityChip';
 
 export default function OrderTable({ orders }: { orders: Order[] }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -34,11 +35,11 @@ export default function OrderTable({ orders }: { orders: Order[] }) {
         }}
       >
         <TableHeader>
-          <TableColumn>Title</TableColumn>
-          <TableColumn>Admin</TableColumn>
-          <TableColumn>Lab</TableColumn>
-          <TableColumn>Priority</TableColumn>
-          <TableColumn>Status</TableColumn>
+          <TableColumn>標題</TableColumn>
+          <TableColumn>品管工程師</TableColumn>
+          <TableColumn>實驗室</TableColumn>
+          <TableColumn>優先序</TableColumn>
+          <TableColumn>狀態</TableColumn>
         </TableHeader>
         <TableBody>
           {orders.map((order) => (
@@ -46,7 +47,9 @@ export default function OrderTable({ orders }: { orders: Order[] }) {
               <TableCell>{order.title}</TableCell>
               <TableCell>{order.admin.name}</TableCell>
               <TableCell>{order.lab?.name}</TableCell>
-              <TableCell>{order.priority}</TableCell>
+              <TableCell>
+                <PriorityChip order={order} />
+              </TableCell>
               <TableCell>
                 <StatusChip order={order} />
               </TableCell>
