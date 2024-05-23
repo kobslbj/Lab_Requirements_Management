@@ -1,5 +1,4 @@
 import { Button } from '@nextui-org/button';
-import { Chip } from '@nextui-org/chip';
 import {
   Modal,
   ModalContent,
@@ -9,7 +8,8 @@ import {
 } from '@nextui-org/modal';
 import { Order } from '@/types';
 import { Divider } from '@nextui-org/react';
-import { ID, Lab, Priority, Status } from './Icons';
+import { ID, Lab, Priority, Status } from '../Icons';
+import StatusChip from './StatusChip';
 
 export default function RowModal({
   activeOrder,
@@ -20,14 +20,16 @@ export default function RowModal({
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  if (!activeOrder) return null;
+
   return (
     <Modal size="lg" isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
-        <ModalHeader className="flex flex-col gap-1">
+        <ModalHeader className="flex flex-col gap-1 text-xl">
           {activeOrder?.title}
         </ModalHeader>
         <ModalBody>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 text-sm">
             <div className="flex items-center">
               <div className="flex min-w-28 items-center gap-2">
                 <ID />
@@ -40,20 +42,14 @@ export default function RowModal({
                 <Lab />
                 Lab
               </div>
-              {activeOrder?.lab?.name}
+              {activeOrder?.lab?.name ?? 'Empty'}
             </div>
             <div className="flex items-center">
               <div className="flex min-w-28 items-center gap-2">
                 <Status />
                 Status
               </div>
-              <Chip
-                variant="flat"
-                radius="sm"
-                color={activeOrder?.is_completed ? 'success' : 'primary'}
-              >
-                {activeOrder?.is_completed ? 'Completed' : 'Pending'}
-              </Chip>
+              <StatusChip order={activeOrder} />
             </div>
             <div className="flex items-center">
               <div className="flex min-w-28 items-center gap-2">
@@ -67,8 +63,8 @@ export default function RowModal({
           {activeOrder?.description}
         </ModalBody>
         <ModalFooter>
-          <Button color="danger" radius="sm">
-            Delete
+          <Button radius="sm" className="bg-black text-white">
+            Edit
           </Button>
         </ModalFooter>
       </ModalContent>

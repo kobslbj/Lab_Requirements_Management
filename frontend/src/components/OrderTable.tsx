@@ -1,7 +1,6 @@
 'use client';
 
 import { Order } from '@/types';
-import { Chip } from '@nextui-org/chip';
 import {
   Table,
   TableHeader,
@@ -13,6 +12,7 @@ import {
 import { useDisclosure } from '@nextui-org/use-disclosure';
 import { useState } from 'react';
 import RowModal from './RowModal';
+import StatusChip from './RowModal/StatusChip';
 
 export default function OrderTable({ orders }: { orders: Order[] }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -48,13 +48,7 @@ export default function OrderTable({ orders }: { orders: Order[] }) {
               <TableCell>{order.lab?.name}</TableCell>
               <TableCell>{order.priority}</TableCell>
               <TableCell>
-                <Chip
-                  variant="flat"
-                  radius="sm"
-                  color={order.is_completed ? 'success' : 'primary'}
-                >
-                  {order.is_completed ? 'Completed' : 'Pending'}
-                </Chip>
+                <StatusChip order={order} />
               </TableCell>
             </TableRow>
           ))}

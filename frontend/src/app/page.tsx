@@ -1,16 +1,10 @@
-import OrderTable from '@/components/OrderTable';
-import { Order } from '@/types';
+import { Link } from '@nextui-org/react';
 
 export default async function Home() {
-  const res = await fetch('http://localhost:3000/mock/orders');
-  const { data }: { data: Order[] } = await res.json();
-
   return (
     <div className="flex h-screen flex-col items-center justify-center p-10">
-      <div className="flex flex-col gap-5">
-        <h1 className="text-3xl font-bold">Orders</h1>
-        <OrderTable orders={data} />
-      </div>
+      <Link href="/admin">Go to Admin Page</Link>
+      <Link href="/worker">Go to Worker Page</Link>
     </div>
   );
 }
