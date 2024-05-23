@@ -2,5 +2,8 @@
   "dependencies": {
     "express": "^4.19.2",
     "mongoose": "^8.4.0"
+  },
+  "scripts": {
+    "test_DB": "node test/test_DB.js",
   }
 }

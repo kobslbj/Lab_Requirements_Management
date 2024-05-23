@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 const OrderSchema = mongoose.Schema(
   {
-    id: {
+    _id: {
       type: String,
-      required: [true, "Please enter product name"],
+      required: true,
     },
 
     title: {
@@ -13,7 +13,7 @@ const OrderSchema = mongoose.Schema(
     },
 
     description: {
-      type: Number,
+      type: String,
       required: true,
     },
 
@@ -44,8 +44,8 @@ const OrderSchema = mongoose.Schema(
     },
 
     attachment: {
-        type: String,  // to be updated
-        required: false,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'fs.files'  // Reference to GridFS files collection
     },
   },
   {
@@ -54,6 +54,6 @@ const OrderSchema = mongoose.Schema(
 );
 
 
-const Order = mongoose.model("Product", OrderSchema);
+const Order = mongoose.model("Order_collection", OrderSchema);
 
 module.exports = Order;
