@@ -10,7 +10,7 @@ export default async function AdminPage() {
     <div className="flex h-screen flex-col items-center justify-center p-10">
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Orders</h1>
+          <h1 className="text-3xl font-bold">委託單列表</h1>
           <OrderCreator />
         </div>
         <OrderTable orders={data} />

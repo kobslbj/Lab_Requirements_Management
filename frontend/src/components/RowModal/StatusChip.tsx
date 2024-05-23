@@ -6,13 +6,9 @@ export default function StatusChip({ order }: { order: Order }) {
     <Chip
       variant="flat"
       radius="sm"
-      color={order.is_completed ? 'success' : order.lab ? 'primary' : 'default'}
+      color={order.is_completed ? 'success' : 'primary'}
     >
-      {order.is_completed
-        ? 'Completed'
-        : order.lab
-          ? 'Pending'
-          : 'Not Assigned'}
+      {order.is_completed ? '完成' : '進行中'}
     </Chip>
   );
 }

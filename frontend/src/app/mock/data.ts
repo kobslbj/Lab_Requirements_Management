@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
 
 const fabs = [
-  { id: faker.string.uuid(), name: 'A' },
-  { id: faker.string.uuid(), name: 'B' },
-  { id: faker.string.uuid(), name: 'C' },
+  { id: faker.string.uuid(), name: 'Fab A' },
+  { id: faker.string.uuid(), name: 'Fab B' },
+  { id: faker.string.uuid(), name: 'Fab C' },
 ];
 
 const admins = Array.from({ length: 10 }, () => ({
@@ -13,9 +13,9 @@ const admins = Array.from({ length: 10 }, () => ({
 }));
 
 const labs = [
-  { id: faker.string.uuid(), name: '化學' },
-  { id: faker.string.uuid(), name: '表面分析' },
-  { id: faker.string.uuid(), name: '成分分析' },
+  { id: faker.string.uuid(), name: '化學實驗室' },
+  { id: faker.string.uuid(), name: '表面分析實驗室' },
+  { id: faker.string.uuid(), name: '成分分析實驗室' },
 ];
 
 export const workers = Array.from({ length: 10 }, () => ({
@@ -30,7 +30,7 @@ export const orders = Array.from({ length: 20 }, () => ({
   description: faker.commerce.productDescription(),
   admin: faker.helpers.arrayElement(admins),
   fab: faker.helpers.arrayElement(fabs),
-  lab: faker.datatype.boolean() ? faker.helpers.arrayElement(labs) : null,
+  lab: faker.helpers.arrayElement(labs),
   priority: faker.number.int({ min: 1, max: 3 }),
   is_completed: faker.datatype.boolean(),
 }));
