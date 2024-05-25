@@ -4,6 +4,7 @@
     "mongoose": "^8.4.0"
   },
   "scripts": {
-    "test_DB": "node test/test_DB.js"
+    "test_DB": "node test/test_DB.js",
+    "dev": "node src/index.js"
   }
 }
