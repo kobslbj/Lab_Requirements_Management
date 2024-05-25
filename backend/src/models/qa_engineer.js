@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const QA_engineer_Schema = mongoose.Schema(
   {
-    id: {
+    _id: {
       type: String,
       required: true,
     },
