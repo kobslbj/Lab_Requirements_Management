@@ -1,5 +1,5 @@
-import OrderCreator from '@/components/OrderCreator';
 import TableWithModal from '@/components/TableWithModal';
+import ActionButton from '@/components/RowModal/ActionButton';
 
 import { Order } from '@/types';
 
@@ -12,9 +12,11 @@ export default async function AdminPage() {
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">委託單列表</h1>
-          <OrderCreator />
         </div>
-        <TableWithModal orders={data} actionType="edit"/>
+        <TableWithModal
+          orders={data}
+          actionButton={<ActionButton actionType="complete" />}
+        />
       </div>
     </div>
   );
