@@ -11,13 +11,17 @@ import {
 import StatusChip from './RowModal/StatusChip';
 import PriorityChip from './RowModal/PriorityChip';
 
+
 export default function OrderTable({
   orders,
   onRowAction,
+  actionType,
 }: {
   orders: Order[];
   onRowAction: (id: Key) => void;
+  actionType: 'admin' | 'worker';
 }) {
+
   return (
     <Table
       aria-label="Example static collection table"
@@ -37,7 +41,7 @@ export default function OrderTable({
       </TableHeader>
       <TableBody>
         {orders.map((order) => (
-          <TableRow key={order.id}>
+          <TableRow key={order.id} onClick={() => onRowAction(order.id)}>
             <TableCell>{order.title}</TableCell>
             <TableCell>{order.admin.name}</TableCell>
             <TableCell>{order.lab?.name}</TableCell>
