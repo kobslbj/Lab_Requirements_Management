@@ -30,3 +30,8 @@ export type Order = {
   priority: number;
   is_completed: boolean;
 };
+
+export type FilterProps = {
+  onStatusChange: (status: number | undefined) => void;
+  onPriorityChange: (priority: number | undefined) => void;
+};
