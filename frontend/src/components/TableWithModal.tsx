@@ -6,7 +6,7 @@ import { Order } from '@/types';
 import RowModal from './RowModal';
 import OrderTable from './OrderTable';
 
-export default function TableWithModal({ orders ,actionType}: { orders: Order[] ,actionType: 'edit' | 'complete';}) {
+export default function TableWithModal({ orders ,actionType}: { orders: Order[] ,actionType: 'admin' | 'worker';}) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [activeOrder, setActiveOrder] = useState<Order | undefined>();
 
@@ -18,7 +18,7 @@ export default function TableWithModal({ orders ,actionType}: { orders: Order[] 
 
   return (
     <>
-      <OrderTable orders={orders} onRowAction={onRowAction} />
+      <OrderTable orders={orders} onRowAction={onRowAction} actionType={actionType}/>
       <RowModal
         activeOrder={activeOrder}
         isOpen={isOpen}

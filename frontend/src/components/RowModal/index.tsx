@@ -22,7 +22,7 @@ export default function RowModal({
   activeOrder: Order | undefined;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  actionType: 'edit' | 'complete';
+  actionType: 'admin' | 'worker';
 }) {
   if (!activeOrder) return null;
 

@@ -14,7 +14,7 @@ export default async function AdminPage() {
           <h1 className="text-3xl font-bold">委託單列表</h1>
           <OrderCreator />
         </div>
-        <TableWithModal orders={data} actionType="edit"/>
+        <TableWithModal orders={data} actionType="admin"/>
       </div>
     </div>
   );
