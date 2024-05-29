@@ -19,13 +19,11 @@ export default function RowModal({
   onOpenChange,
   actionType,
 }: {
-  activeOrder: Order | undefined;
+  activeOrder: Order;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   actionType: 'admin' | 'worker';
 }) {
-  if (!activeOrder) return null;
-
   return (
     <Modal size="lg" isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
@@ -51,7 +49,7 @@ export default function RowModal({
                   </>
                 }
               >
-                {activeOrder.lab?.name ?? 'Empty'}
+                {activeOrder.lab_name}
               </Property>
             ) : (
               <Property
@@ -62,7 +60,7 @@ export default function RowModal({
                   </>
                 }
               >
-                {activeOrder.fab?.name ?? 'Empty'}
+                {activeOrder.fab_name}
               </Property>
             )}
             <Property
