@@ -1,7 +1,7 @@
 'use client';
 
 import { useDisclosure } from '@nextui-org/use-disclosure';
-import { Key, useState, useEffect } from 'react';
+import { Key, useState } from 'react';
 import { Order } from '@/types';
 import RowModal from './RowModal';
 import OrderTable from './OrderTable';
