@@ -2,13 +2,13 @@ export type Fab = 'Fab A' | 'Fab B' | 'Fab C';
 
 export type Lab = '化學實驗室' | '表面分析實驗室' | '成分分析實驗室';
 
-export type Admin = {
+export type QAEngineer = {
   id: string;
   name: string;
   fab_name: Fab;
 };
 
-export type Worker = {
+export type LabStaff = {
   id: string;
   name: string;
   lab_name: Lab;
@@ -18,7 +18,7 @@ export type Order = {
   id: string;
   title: string;
   description: string;
-  admin: Admin;
+  creator: string;
   fab_name: Fab;
   lab_name: Lab;
   priority: number;
