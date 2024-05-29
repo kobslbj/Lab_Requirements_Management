@@ -1,21 +1,22 @@
 # Backend
 
 ## File structure
-| -- src
-
-| ------ index.js
-
-| ------ models (schema)
-
-| ---------- [order | lab_staff | qa_engineer].js
-
-| ------ routes (api routes)
-
-| ---------- [order | lab_staff | qa_engineer].js
-
-| ------ services (functions)
-
-| ---------- [order | lab_staff | qa_engineer].js
+```bash
+src
+├── index.js
+├── models
+│   ├── lab_staff.js
+│   ├── order.js
+│   └── qa_engineer.js
+├── routes
+│   ├── lab_staff.js
+│   ├── order.js
+│   └── qa_engineer.js
+└── services
+    ├── lab_staff.js
+    ├── order.js
+    └── qa_engineer.js
+```
 
 ## How to use
 1. build
@@ -32,12 +33,12 @@ npm run dev
 ```
 
 ## API routes
+### routes
 - /api/orders
 - /api/staffs
 - /api/qa_engineers
 
-4 actions in these routes
-
+### action under routes
 1. GET("/") : return the whole table
 2. GET("/:id") : return the element
 3. POST("/") : add entry
