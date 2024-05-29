@@ -1,32 +1,26 @@
-export type Admin = {
+export type Fab = 'Fab A' | 'Fab B' | 'Fab C';
+
+export type Lab = '化學實驗室' | '表面分析實驗室' | '成分分析實驗室';
+
+export type QAEngineer = {
   id: string;
   name: string;
-  fab_id: string;
+  fab_name: Fab;
 };
 
-export type Fab = {
+export type LabStaff = {
   id: string;
   name: string;
-};
-
-export type Lab = {
-  id: string;
-  name: string;
-};
-
-export type Worker = {
-  id: string;
-  name: string;
-  lab_id: string;
+  lab_name: Lab;
 };
 
 export type Order = {
   id: string;
   title: string;
   description: string;
-  admin: Admin;
-  fab: Fab;
-  lab: Lab | null;
+  creator: string;
+  fab_name: Fab;
+  lab_name: Lab;
   priority: number;
   is_completed: boolean;
 };

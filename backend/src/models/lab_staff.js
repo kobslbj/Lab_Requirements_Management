@@ -7,21 +7,24 @@ const Lab_staff_Schema = mongoose.Schema(
       required: true,
     },
 
-    name: {
-      type: String,
-      required: true,
+    name:{
+        type: String,
+        required: true,
+    },
+    password:{
+        type: String,
+        required: true,
     },
 
-    lab_name: {
-      type: String,
-      required: true,
-      validate: {
-        validator: function (value) {
-          return ["Chemical", "Surface", "Composition"].includes(value);
-        },
-        message: (props) =>
-          `${props.value} is not a valid lab name. Lab name must be one of: Chemical, Surface, Composition`,
-      },
+    lab_name:{
+        type: String,
+        required: true,
+        validate: {
+            validator: function(value) {
+                return ['化學實驗室', '表面分析實驗室', '成分分析實驗室'].includes(value);
+            },
+            message: props => `${props.value} is not a valid lab name. Lab name must be one of: Chemical, Surface, Composition`
+        }
     },
   },
   {

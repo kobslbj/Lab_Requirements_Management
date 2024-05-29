@@ -53,19 +53,21 @@ export default function TableWithModal({
           onStatusChange={handleStatusChange}
           onPriorityChange={handlePriorityChange}
         />
-        <OrderCreator />
+        {actionType === 'admin' && <OrderCreator />}
       </div>
       <OrderTable
         orders={filteredOrders}
         onRowAction={onRowAction}
         actionType={actionType}
       />
-      <RowModal
-        activeOrder={activeOrder}
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        actionType={actionType}
-      />
+      {activeOrder !== undefined && (
+        <RowModal
+          activeOrder={activeOrder}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          actionType={actionType}
+        />
+      )}
     </>
   );
 }

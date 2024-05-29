@@ -11,7 +11,7 @@ const {
 router.get("/", getQAEngineers);
 router.get("/:id", getQAEngineer);
 
-router.post("/", createQAEngineer);
+router.post("/register", createQAEngineer);
 
 // delete a QAEngineer
 router.delete("/:id", deleteQAEngineer);

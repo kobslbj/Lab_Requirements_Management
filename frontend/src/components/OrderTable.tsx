@@ -46,11 +46,11 @@ export default function OrderTable({
         {orders.map((order) => (
           <TableRow key={order.id} onClick={() => onRowAction(order.id)}>
             <TableCell>{order.title}</TableCell>
-            <TableCell>{order.admin.name}</TableCell>
+            <TableCell>{order.creator}</TableCell>
             {actionType === 'admin' ? (
-              <TableCell>{order.lab?.name}</TableCell>
+              <TableCell>{order.lab_name}</TableCell>
             ) : (
-              <TableCell>{order.fab?.name}</TableCell>
+              <TableCell>{order.fab_name}</TableCell>
             )}
             <TableCell>
               <PriorityChip order={order} />
