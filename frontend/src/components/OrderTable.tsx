@@ -24,9 +24,10 @@ export default function OrderTable({
     <Table
       aria-label="Example static collection table"
       isHeaderSticky
-      className="h-[80vh]"
+      className="h-[70vh]"
       onRowAction={onRowAction}
       classNames={{
+        base: 'w-[60vw]',
         tr: 'hover:bg-[#f4f4f5] transition-all cursor-pointer',
       }}
     >
