@@ -45,8 +45,8 @@ const deleteStaff = async (req, res) => {
 };
 
 module.exports = {
-    getStaffs,
-    getStaff,
-    createStaff,
-    deleteStaff
+  getStaffs,
+  getStaff,
+  createStaff,
+  deleteStaff,
 };
