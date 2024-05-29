@@ -42,26 +42,29 @@ export default function RowModal({
             >
               {activeOrder.id}
             </Property>
-            <Property
-              name={
-                <>
-                  <Fab />
-                  廠區
-                </>
-              }
-            >
-              {activeOrder.fab?.name ?? 'Empty'}
-            </Property>
-            <Property
-              name={
-                <>
-                  <Lab />
-                  實驗室
-                </>
-              }
-            >
-              {activeOrder.lab?.name ?? 'Empty'}
-            </Property>
+            {actionType === 'admin' ? (
+              <Property
+                name={
+                  <>
+                    <Lab />
+                    實驗室
+                  </>
+                }
+              >
+                {activeOrder.lab?.name ?? 'Empty'}
+              </Property>
+            ) : (
+              <Property
+                name={
+                  <>
+                    <Fab />
+                    廠區
+                  </>
+                }
+              >
+                {activeOrder.fab?.name ?? 'Empty'}
+              </Property>
+            )}
             <Property
               name={
                 <>
@@ -87,9 +90,7 @@ export default function RowModal({
           {activeOrder.description}
         </ModalBody>
         <ModalFooter>
-          <ModalFooter>
-            <ActionButton actionType={actionType} />
-          </ModalFooter>
+          <ActionButton actionType={actionType} />
         </ModalFooter>
       </ModalContent>
     </Modal>
