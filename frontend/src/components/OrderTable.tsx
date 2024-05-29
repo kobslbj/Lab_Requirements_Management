@@ -11,6 +11,7 @@ import {
 import StatusChip from './RowModal/StatusChip';
 import PriorityChip from './RowModal/PriorityChip';
 
+
 export default function OrderTable({
   orders,
   onRowAction,
@@ -20,6 +21,7 @@ export default function OrderTable({
   onRowAction: (id: Key) => void;
   actionType: 'admin' | 'worker';
 }) {
+
   return (
     <Table
       aria-label="Example static collection table"
