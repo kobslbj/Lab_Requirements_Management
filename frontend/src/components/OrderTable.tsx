@@ -48,9 +48,9 @@ export default function OrderTable({
             <TableCell>{order.title}</TableCell>
             <TableCell>{order.admin.name}</TableCell>
             {actionType === 'admin' ? (
-              <TableCell>{order.lab?.name}</TableCell>
+              <TableCell>{order.lab_name}</TableCell>
             ) : (
-              <TableCell>{order.fab?.name}</TableCell>
+              <TableCell>{order.fab_name}</TableCell>
             )}
             <TableCell>
               <PriorityChip order={order} />
