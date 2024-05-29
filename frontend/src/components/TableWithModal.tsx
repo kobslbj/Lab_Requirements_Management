@@ -6,6 +6,7 @@ import { Order } from '@/types';
 import RowModal from './RowModal';
 import OrderTable from './OrderTable';
 import Filter from './Filter';
+import OrderCreator from './OrderCreator';
 
 export default function TableWithModal({
   orders,
@@ -47,10 +48,13 @@ export default function TableWithModal({
 
   return (
     <>
-      <Filter
-        onStatusChange={handleStatusChange}
-        onPriorityChange={handlePriorityChange}
-      />
+      <div className="flex justify-between">
+        <Filter
+          onStatusChange={handleStatusChange}
+          onPriorityChange={handlePriorityChange}
+        />
+        <OrderCreator />
+      </div>
       <OrderTable
         orders={filteredOrders}
         onRowAction={onRowAction}

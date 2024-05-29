@@ -13,9 +13,10 @@ function Filter({
   return (
     <div className="flex w-full flex-wrap gap-4 md:flex-nowrap">
       <Select
+        size="sm"
         label="優先序"
-        className="max-w-xs"
-        variant="bordered"
+        className="max-w-[10rem]"
+        variant="faded"
         onChange={(e) => {
           if (e.target.value === '') {
             onPriorityChange(undefined);
@@ -30,9 +31,10 @@ function Filter({
         ))}
       </Select>
       <Select
+        size="sm"
         label="狀態"
-        className="max-w-xs"
-        variant="bordered"
+        className="max-w-[10rem]"
+        variant="faded"
         onChange={(e) => {
           if (e.target.value === '') {
             onStatusChange(undefined);
