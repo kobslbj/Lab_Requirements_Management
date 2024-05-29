@@ -1,4 +1,4 @@
-const Staff = require("../models/lab_staff.js");
+const Staff = require("../models/staff.js");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const secretKey = 'secretkey';
@@ -51,11 +51,11 @@ const deleteStaff = async (req, res) => {
 
 const signinStaff = async (req, res) => {
   try {
-    const { name, password } = req.body;
-    // Find staff by name
-    const staff = await Staff.findOne({ name });
+    const { email, password } = req.body;
+    // Find staff by email
+    const staff = await Staff.findOne({ email });
     if (!staff) {
-      return res.status(401).json({ message: "Invalid username" });
+      return res.status(401).json({ message: "Invalid email" });
     }
     const isMatch = bcrypt.compareSync(password, staff.password);
     if (!isMatch) {
@@ -65,12 +65,19 @@ const signinStaff = async (req, res) => {
     
     // Generate JWT
     const token = jwt.sign(
-      { name: staff.name, id: staff._id, lab_name: staff.lab_name },
+      { email: staff.email, id: staff._id, department_name: staff.department_name },
       secretKey,
       { expiresIn: '1h' }
     );
 
-    return res.status(200).json({ token });
+    var position = null;
+    if (staff.department_name === 'Fab A' || staff.department_name === 'Fab B' || staff.department_name === 'Fab C') {
+      position = 'Fab';
+    } else {
+      position = 'Lab';
+    }
+
+    return res.status(200).json({ token, position });
   } catch (err) {
     console.error("Error signing in staff", err);
     // console.error(err);

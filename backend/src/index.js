@@ -7,11 +7,9 @@ const path = require("path");
 const crypto = require("crypto");
 
 const Order = require("./models/order.js");
-const Staff = require("./models/lab_staff.js");
-const QAEngineer = require("./models/qa_engineer.js");
+const Staff = require("./models/staff.js");
 const orderRoute = require("./routes/order.js");
-const staffRoute = require("./routes/lab_staff.js");
-const qaEngineerRoute = require("./routes/qa_engineer.js");
+const staffRoute = require("./routes/staff.js");
 const { read } = require("fs");
 
 const app = express();
@@ -22,7 +20,6 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/orders", orderRoute);
 app.use("/api/staffs", staffRoute);
-app.use("/api/qa_engineers", qaEngineerRoute);
 
 // mongo uri
 const mongoURI = "mongodb://localhost:27017/lab_requirement_db";
