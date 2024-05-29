@@ -15,10 +15,9 @@ export default function TableWithModal({
   actionType: 'admin' | 'worker';
 }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [activeOrder, setActiveOrder] = useState<Order | undefined>();
-  const [filteredOrders, setFilteredOrders] = useState(orders);
-  const [status, setStatus] = useState<number | undefined>(0);
-  const [priority, setPriority] = useState<number | undefined>(0);
+  const [activeOrder, setActiveOrder] = useState<Order>();
+  const [status, setStatus] = useState<boolean>();
+  const [priority, setPriority] = useState<number>();
 
   const onRowAction = (id: Key) => {
     const order = orders.find((o) => o.id === id);
@@ -26,7 +25,7 @@ export default function TableWithModal({
     onOpen();
   };
 
-  const handleStatusChange = (newStatus: number | undefined) => {
+  const handleStatusChange = (newStatus: boolean | undefined) => {
     setStatus(newStatus);
   };
 
@@ -34,27 +33,17 @@ export default function TableWithModal({
     setPriority(newPriority);
   };
 
-  useEffect(() => {
-    filterOrders(status, priority);
-  }, [status, priority, orders]);
+  let filteredOrders = orders;
 
-  const filterOrders = (
-    status: number | undefined,
-    priority: number | undefined,
-  ) => {
-    let newOrders = orders;
+  if (status !== undefined) {
+    filteredOrders = orders.filter((order) => status === order.is_completed);
+  }
 
-    if (status !== undefined && status !== 0) {
-      newOrders = newOrders.filter((order) =>
-        status === 2 ? order.is_completed : !order.is_completed,
-      );
-    }
-
-    if (priority !== undefined && priority !== 0) {
-      newOrders = newOrders.filter((order) => order.priority === priority);
-    }
-    setFilteredOrders(newOrders);
-  };
+  if (priority !== undefined) {
+    filteredOrders = filteredOrders.filter(
+      (order) => order.priority === priority,
+    );
+  }
 
   return (
     <>
