@@ -1,4 +1,3 @@
-import OrderCreator from '@/components/OrderCreator';
 import TableWithModal from '@/components/TableWithModal';
 import AvatarButton from '@/components/Avatar';
 import { Order } from '@/types';

@@ -23,36 +23,35 @@ const OrderSchema = mongoose.Schema(
     },
 
     fab_id: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
 
     lab_id: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
 
     priority: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: true,
     },
 
     is_completed: {
-        type: Boolean,
-        required: true,
-        default: false,
+      type: Boolean,
+      required: true,
+      default: false,
     },
 
     attachment: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'fs.files'  // Reference to GridFS files collection
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "fs.files", // Reference to GridFS files collection
     },
   },
   {
     timestamps: true,
   }
 );
-
 
 const Order = mongoose.model("Order_collection", OrderSchema);
 
