@@ -45,8 +45,8 @@ const deleteQAEngineer = async (req, res) => {
 };
 
 module.exports = {
-    getQAEngineers,
-    getQAEngineer,
-    createQAEngineer,
-    deleteQAEngineer
+  getQAEngineers,
+  getQAEngineer,
+  createQAEngineer,
+  deleteQAEngineer,
 };

@@ -7,22 +7,22 @@ const QA_engineer_Schema = mongoose.Schema(
       required: true,
     },
 
-    name:{
-        type: String,
-        required: true,
+    name: {
+      type: String,
+      required: true,
     },
 
-    fab_name:{
-        type: String,
-        required: true,
-        validate: {
-            validator: function(value) {
-                return ['Fab A', 'Fab B', 'Fab C'].includes(value);
-            },
-            message: props => `${props.value} is not a valid fab name. Fab name must be one of: Fab A, Fab B, Fab C`
-        }
+    fab_name: {
+      type: String,
+      required: true,
+      validate: {
+        validator: function (value) {
+          return ["Fab A", "Fab B", "Fab C"].includes(value);
+        },
+        message: (props) =>
+          `${props.value} is not a valid fab name. Fab name must be one of: Fab A, Fab B, Fab C`,
+      },
     },
-    
   },
   {
     timestamps: true,

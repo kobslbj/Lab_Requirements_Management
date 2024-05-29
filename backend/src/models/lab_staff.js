@@ -26,7 +26,6 @@ const Lab_staff_Schema = mongoose.Schema(
             message: props => `${props.value} is not a valid lab name. Lab name must be one of: Chemical, Surface, Composition`
         }
     },
-    
   },
   {
     timestamps: true,
