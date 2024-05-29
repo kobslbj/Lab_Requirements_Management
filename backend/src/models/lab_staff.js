@@ -11,6 +11,10 @@ const Lab_staff_Schema = mongoose.Schema(
         type: String,
         required: true,
     },
+    password:{
+        type: String,
+        required: true,
+    },
 
     lab_name:{
         type: String,
