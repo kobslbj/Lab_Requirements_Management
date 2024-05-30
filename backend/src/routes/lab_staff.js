@@ -6,6 +6,7 @@ const {
   getStaff,
   createStaff,
   deleteStaff,
+  signinStaff,
 } = require("../services/lab_staff.js");
 
 router.get("/", getStaffs);

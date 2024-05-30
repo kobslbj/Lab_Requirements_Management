@@ -24,14 +24,8 @@ app.use("/api/orders", orderRoute);
 app.use("/api/staffs", staffRoute);
 app.use("/api/qa_engineers", qaEngineerRoute);
 
-// mongo uri
 const mongoURI = "mongodb://localhost:27017/lab_requirement_db";
-
-// create mongo collection
-const conn = mongoose.createConnection(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const conn = mongoose.createConnection(mongoURI);
 
 // init gfs
 let gfs;
@@ -92,10 +86,7 @@ app.get("/file/:id", (req, res) => {
 });
 
 mongoose
-  .connect(mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(mongoURI)
   .then(() => {
     console.log("Connected to database!");
     app.listen(3000, () => {
