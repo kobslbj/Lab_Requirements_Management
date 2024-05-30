@@ -38,7 +38,7 @@ describe("Order API", () => {
       .send(orderData)
       .expect(200);
 
-    console.log("Create Order Response:", res.body);
+    // console.log("Create Order Response:", res.body);
     expect(res.body.title).toBe(orderData.title);
     expect(res.body.description).toBe(orderData.description);
   });
@@ -59,7 +59,7 @@ describe("Order API", () => {
 
     const res = await request(app).get("/api/orders/2").expect(200);
 
-    console.log("Get Order by ID Response:", res.body);
+    // console.log("Get Order by ID Response:", res.body);
     expect(res.body.title).toBe(orderData.title);
     expect(res.body.description).toBe(orderData.description);
   });

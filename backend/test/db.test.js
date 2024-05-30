@@ -10,10 +10,7 @@ console.log(
 );
 // Connect to MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/yourDatabase", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect("mongodb://localhost:27017/yourDatabase")
   .then(() => {
     console.log("Connected to MongoDB");
 
