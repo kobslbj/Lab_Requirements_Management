@@ -5,22 +5,50 @@ const fs = require("fs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
 const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 const orderRoute = require("../src/routes/order");
+const staffRoute = require("../src/routes/staff");
+const Staff = require("../src/models/staff");
 const { getOrders } = require("../src/services/order");
 const Order = require("../src/models/order");
 const GridFSBucket = require("mongodb").GridFSBucket;
 
+const secretKey = "secretkey";
+
 let app;
+let token;
 
 beforeAll(async () => {
   const uri = "mongodb://localhost:27017/test";
-  await mongoose.connect(uri);
+  await mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
   app = express();
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(require("express-fileupload")());
   app.use("/api/orders", orderRoute);
+  app.use("/api/staffs", staffRoute);
+
+  // Create a test user with a valid department name
+  const staff = await Staff.create({
+    email: "testuser@example.com",
+    password: "password",
+    department_name: "Fab A", // Valid department name
+  });
+
+  // Generate a valid JWT token
+  token = jwt.sign(
+    {
+      email: staff.email,
+      id: staff._id,
+      department_name: staff.department_name,
+    },
+    secretKey,
+    { expiresIn: "1h" }
+  );
 });
 
 afterAll(async () => {
@@ -39,6 +67,7 @@ describe("Order API", () => {
 
     const response = await request(app)
       .post("/api/orders")
+      .set("Authorization", `Bearer ${token}`)
       .field("title", 123)
       .field("description", "Test order")
       .field("creator", "test_creator")
@@ -72,6 +101,7 @@ describe("Order API", () => {
 
     const response = await request(app)
       .post("/api/orders")
+      .set("Authorization", `Bearer ${token}`)
       .field("title", 124)
       .field("description", "Test order with two PDFs")
       .field("creator", "test_creator")
@@ -104,6 +134,7 @@ describe("Order API", () => {
     // Create an order to update
     const createResponse = await request(app)
       .post("/api/orders")
+      .set("Authorization", `Bearer ${token}`)
       .field("title", 125)
       .field("description", "Order to be updated")
       .field("creator", "test_creator")
@@ -121,6 +152,7 @@ describe("Order API", () => {
     // Update the order
     const updateResponse = await request(app)
       .put("/api/orders")
+      .set("Authorization", `Bearer ${token}`)
       .field("_id", orderId) // Ensure _id is included in the request body
       .field("title", 126)
       .field("description", "Updated description")
@@ -152,6 +184,7 @@ describe("Order API", () => {
     // Create an order to update
     const createResponse = await request(app)
       .post("/api/orders")
+      .set("Authorization", `Bearer ${token}`)
       .field("title", 127)
       .field("description", "Order to be marked as completed")
       .field("creator", "test_creator")
@@ -166,7 +199,7 @@ describe("Order API", () => {
     // Mark the order as completed
     const completeResponse = await request(app)
       .put(`/api/orders/${orderId}`)
-      .set("Authorization", "Bearer <YOUR-TOKEN>");
+      .set("Authorization", `Bearer ${token}`);
 
     expect(completeResponse.status).toBe(200);
     expect(completeResponse.body.is_completed).toBe(true);
