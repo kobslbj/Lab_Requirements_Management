@@ -1,7 +1,6 @@
 import SubmitButton from '@/components/SubmitButton';
 import { Input } from '@nextui-org/react';
-
-import validateUser from './action';
+import { login } from './action';
 
 export default async function LoginPage() {
   return (
@@ -10,7 +9,7 @@ export default async function LoginPage() {
         <div className="mb-10 flex items-center justify-center text-3xl font-bold ">
           <p>Login</p>
         </div>
-        <form action={validateUser} className="flex-col">
+        <form action={login} className="flex-col">
           <div className="mb-6 flex items-center justify-center ">
             <Input
               labelPlacement="outside"
