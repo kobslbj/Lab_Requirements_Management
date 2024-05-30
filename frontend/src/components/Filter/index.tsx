@@ -27,7 +27,9 @@ function Filter({
         }}
       >
         {priority.map((p) => (
-          <SelectItem key={p.key}>{p.label}</SelectItem>
+          <SelectItem key={p.key} variant="flat" color={p.color}>
+            {p.label}
+          </SelectItem>
         ))}
       </Select>
       <Select
@@ -45,7 +47,9 @@ function Filter({
         }}
       >
         {status.map((s) => (
-          <SelectItem key={s.key}>{s.label}</SelectItem>
+          <SelectItem key={s.key} variant="flat" color={s.color}>
+            {s.label}
+          </SelectItem>
         ))}
       </Select>
     </div>
