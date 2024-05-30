@@ -8,16 +8,9 @@ import {
   User,
 } from '@nextui-org/react';
 import { AvatarButtonProps } from '@/types';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
+import { logOut } from '@/app/login/action';
 
 export default function AvatarButton({ name, position }: AvatarButtonProps) {
-    const router = useRouter();
-  const handleLogout = () => {
-    Cookies.remove('accessToken');
-    Cookies.remove('position');
-    router.push('/login');
-  };
   return (
     <div className="flex items-center gap-4">
       <Dropdown placement="bottom-start">
@@ -34,7 +27,13 @@ export default function AvatarButton({ name, position }: AvatarButtonProps) {
           />
         </DropdownTrigger>
         <DropdownMenu aria-label="User Actions" variant="flat">
-          <DropdownItem key="logout" color="danger" onPress={handleLogout}>
+          <DropdownItem
+            key="logout"
+            color="danger"
+            onPress={async () => {
+              await logOut();
+            }}
+          >
             Log Out
           </DropdownItem>
         </DropdownMenu>

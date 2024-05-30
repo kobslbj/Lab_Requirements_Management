@@ -1,70 +1,64 @@
 const Order = require("../models/order.js");
 
-const getOrders = async (req, res) => {
+const getOrders = async () => {
   try {
     const orders = await Order.find({});
-    res.status(200).json(orders);
+    return orders;
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    throw new Error(error.message);
   }
 };
 
-const getOrder = async (req, res) => {
+const getOrder = async (id) => {
   try {
-    const { id } = req.params;
     const order = await Order.findById(id);
-    res.status(200).json(order);
+    return order;
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    throw new Error(error.message);
   }
 };
 
-const createOrder = async (req, res) => {
+const createOrder = async (orderData) => {
   try {
-    const order = await Order.create(req.body);
-    res.status(200).json(order);
+    const order = await Order.create(orderData);
+    return order;
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    throw new Error(error.message);
   }
 };
 
-const updateOrder = async (req, res) => {
+const updateOrder = async (id, orderData) => {
   try {
-    const { id } = req.params;
-
-    const order = await Order.findByIdAndUpdate(id, req.body);
+    const order = await Order.findByIdAndUpdate(id, orderData, { new: true });
 
     if (!order) {
-      return res.status(404).json({ message: "Order not found" });
+      throw new Error("Order not found");
     }
 
-    const updatedOrder = await Product.findById(id);
-    res.status(200).json(updatedOrder);
+    return order;
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    throw new Error(error.message);
   }
 };
 
-const deleteOrder = async (req, res) => {
+const deleteOrder = async (id) => {
   try {
-    const { id } = req.params;
-
     const order = await Order.findByIdAndDelete(id);
 
     if (!order) {
-      return res.status(404).json({ message: "Order not found" });
+      throw new Error("Order not found");
     }
 
-    res.status(200).json({ message: "Order deleted successfully" });
+    return "Order deleted successfully";
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    throw new Error(error.message);
   }
 };
 
 module.exports = {
-    getOrders,
-    getOrder,
-    createOrder,
-    updateOrder,
-    deleteOrder,
+  getOrders,
+  getOrder,
+  createOrder,
+  updateOrder,
+  deleteOrder,
 };

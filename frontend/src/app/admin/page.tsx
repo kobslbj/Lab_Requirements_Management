@@ -1,4 +1,3 @@
-import OrderCreator from '@/components/OrderCreator';
 import TableWithModal from '@/components/TableWithModal';
 import AvatarButton from '@/components/Avatar';
 import { Order } from '@/types';
@@ -13,7 +12,6 @@ export default async function AdminPage() {
         <div className="flex items-center justify-between">
           <div className="text-3xl font-bold">委託單列表</div>
           <div className="flex gap-5">
-            <OrderCreator />
             <AvatarButton name="Justin" position="Lab A" />
           </div>
         </div>
