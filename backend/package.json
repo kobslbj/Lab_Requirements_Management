@@ -10,7 +10,8 @@
     "multer-gridfs-storage": "^5.0.2"
   },
   "scripts": {
-    "test": "jest --detectOpenHandles"
+    "test": "jest --detectOpenHandles",
+    "dev": "node src/index.js"
   },
   "devDependencies": {
     "express-fileupload": "^1.5.0",
