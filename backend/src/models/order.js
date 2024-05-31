@@ -12,7 +12,6 @@ const FileSchema = new mongoose.Schema({
 
 const OrderSchema = mongoose.Schema(
   {
-    _id: { type: String, required: true },
     title: { type: Number, required: true },
     description: { type: String, required: true },
     creator: { type: String, required: true },
