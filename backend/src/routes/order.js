@@ -8,9 +8,10 @@ const {
 const authenticateToken = require("../middleware/authenticateToken");
 const router = express.Router();
 
+// get all orders
 router.get("/", authenticateToken, async (req, res) => {
   try {
-    const orders = await getOrders();
+    const orders = await getOrders(req.user);
     res.status(200).json(orders);
   } catch (error) {
     console.error("Error fetching orders:", error);
@@ -18,9 +19,12 @@ router.get("/", authenticateToken, async (req, res) => {
   }
 });
 
+// create order
 router.post("/", authenticateToken, async (req, res) => {
   try {
-    const order = await createOrder(req.body, req.files);
+    console.log(req)
+    console.log("req.files", req.files)
+    const order = await createOrder(req.body, req.user, req.files);
     res.status(200).json(order);
   } catch (error) {
     console.error("Error creating order:", error);
@@ -28,10 +32,11 @@ router.post("/", authenticateToken, async (req, res) => {
   }
 });
 
+// update order
 router.put("/", authenticateToken, async (req, res) => {
   try {
     const orderId = req.body._id; // Ensure _id is included in the request body
-    const updatedOrder = await updateOrder(orderId, req.body, req.files);
+    const updatedOrder = await updateOrder(orderId, req.body, req.files, req.user);
     res.status(200).json(updatedOrder);
   } catch (error) {
     console.error("Error updating order:", error);
@@ -39,10 +44,11 @@ router.put("/", authenticateToken, async (req, res) => {
   }
 });
 
+// mark order as completed
 router.put("/:orderId", authenticateToken, async (req, res) => {
   try {
     const { orderId } = req.params;
-    const updatedOrder = await markOrderAsCompleted(orderId);
+    const updatedOrder = await markOrderAsCompleted(orderId, req.user);
     res.status(200).json(updatedOrder);
   } catch (error) {
     console.error("Error marking order as completed:", error);

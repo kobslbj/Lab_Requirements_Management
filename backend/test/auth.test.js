@@ -71,7 +71,7 @@ describe("JWT Authentication", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("_id");
-    expect(response.body.title).toBe(123);
+    expect(response.body.title).toBe("123");
 
     // Clean up
     fs.unlinkSync(pdfPath);

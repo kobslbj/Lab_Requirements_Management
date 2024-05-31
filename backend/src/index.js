@@ -22,7 +22,10 @@ app.use("/api/staffs", staffRoute);
 const mongoURI = "mongodb://localhost:27017/lab_requirement_db";
 
 mongoose
-  .connect(mongoURI)
+  .connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
   .then(() => {
     console.log("Connected to database!");
     app.listen(3000, () => {
