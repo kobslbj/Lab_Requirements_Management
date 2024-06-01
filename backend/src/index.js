@@ -23,7 +23,6 @@ const mongoURI = "mongodb://localhost:27017/lab_requirement_db";
 
 mongoose
   .connect(mongoURI)
-  .connect(mongoURI)
   .then(() => {
     console.log("Connected to database!");
     app.listen(3000, () => {

@@ -20,10 +20,7 @@ let token;
 
 beforeAll(async () => {
   const uri = "mongodb://localhost:27017/test";
-  await mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(uri);
 
   app = express();
   app.use(express.json());
@@ -78,7 +75,7 @@ describe("Order API", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.attachments).toHaveLength(1);
-    expect(response.body.attachments[0]).toHaveProperty("uuid");
+    expect(response.body.attachments[0]).toHaveProperty("_id");
     expect(response.body.attachments[0]).toHaveProperty("file");
 
     // Clean up
@@ -113,9 +110,9 @@ describe("Order API", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.attachments).toHaveLength(2);
-    expect(response.body.attachments[0]).toHaveProperty("uuid");
+    expect(response.body.attachments[0]).toHaveProperty("_id");
     expect(response.body.attachments[0]).toHaveProperty("file");
-    expect(response.body.attachments[1]).toHaveProperty("uuid");
+    expect(response.body.attachments[1]).toHaveProperty("_id");
     expect(response.body.attachments[1]).toHaveProperty("file");
 
     // Clean up
@@ -147,7 +144,7 @@ describe("Order API", () => {
 
     // Find the created order by title
     const [orderToUpdate] = await getOrders(125);
-    const orderId = orderToUpdate._id;
+    const orderId = orderToUpdate._id.toString();
 
     // Update the order
     const updateResponse = await request(app)
@@ -166,7 +163,7 @@ describe("Order API", () => {
     expect(updateResponse.body.priority).toBe(4);
     expect(updateResponse.body.lab_id).toBe("updated_lab125");
     expect(updateResponse.body.attachments).toHaveLength(1);
-    expect(updateResponse.body.attachments[0]).toHaveProperty("uuid");
+    expect(updateResponse.body.attachments[0]).toHaveProperty("_id");
     expect(updateResponse.body.attachments[0]).toHaveProperty("file");
 
     // Clean up
@@ -238,5 +235,9 @@ describe("Order API", () => {
 
     // To ensure the test passes, we check if files is an array
     expect(Array.isArray(files)).toBe(true);
+
+    // Print all orders in the MongoDB database
+    const orders = await getOrders();
+    console.log("Orders in MongoDB:", JSON.stringify(orders, null, 2));
   });
 });

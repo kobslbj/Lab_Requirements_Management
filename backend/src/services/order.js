@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { GridFSBucket } = require("mongodb");
-const { v4: uuidv4 } = require("uuid");
 const crypto = require("crypto");
 const { Order, File } = require("../models/order.js");
 
@@ -18,10 +17,6 @@ const createOrder = async (orderData, files) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    if (!orderData._id) {
-      orderData._id = uuidv4();
-    }
-
     if (files && files.file) {
       const attachments = [];
       const bucket = new GridFSBucket(mongoose.connection.db, {
@@ -39,8 +34,7 @@ const createOrder = async (orderData, files) => {
           await new Promise((resolve, reject) => {
             uploadStream.end(file.data);
             uploadStream.on("finish", () => {
-              const uuid = uuidv4();
-              attachments.push({ uuid, file: uploadStream.id });
+              attachments.push({ file: uploadStream.id });
               resolve();
             });
             uploadStream.on("error", (error) => {
@@ -99,8 +93,7 @@ const updateOrder = async (orderId, orderData, files) => {
           await new Promise((resolve, reject) => {
             uploadStream.end(file.data);
             uploadStream.on("finish", () => {
-              const uuid = uuidv4();
-              attachments.push({ uuid, file: uploadStream.id });
+              attachments.push({ file: uploadStream.id });
               resolve();
             });
             uploadStream.on("error", (error) => {
