@@ -11,12 +11,11 @@ const FileSchema = new mongoose.Schema({
 
 const OrderSchema = mongoose.Schema(
   {
-    // _id: { type: String, required: true },
-    title: { type: Number, required: true },
+    title: { type: String, required: true },
     description: { type: String, required: true },
     creator: { type: String, required: true },
-    fab_id: { type: String, required: true },
-    lab_id: { type: String, required: true },
+    fab_name: { type: String, required: true },
+    lab_name: { type: String, required: true },
     priority: { type: Number, required: true },
     is_completed: { type: Boolean, required: true, default: false },
     attachments: [
