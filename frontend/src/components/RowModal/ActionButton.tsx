@@ -1,6 +1,6 @@
+import { completeOrder, updateOrder } from '@/actions/order';
 import { Button } from '@nextui-org/button';
 import { useTransition } from 'react';
-import updateOrder from './action';
 
 type Action = 'admin-view' | 'admin-edit' | 'worker-view';
 
@@ -19,6 +19,12 @@ export default function ActionButton({
       className="bg-black text-white"
       isLoading={isPending}
       onPress={() => {
+        if (action === 'worker-view') {
+          startTransition(async () => {
+            await completeOrder();
+          });
+        }
+
         if (action === 'admin-view') {
           setAction('admin-edit');
           return;

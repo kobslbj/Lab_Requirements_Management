@@ -17,9 +17,9 @@ import {
   Textarea,
 } from '@nextui-org/react';
 import { useState, useTransition } from 'react';
+import { createOrder } from '@/actions/order';
 import { Lab, Priority } from '../Icons';
 import Property from '../RowModal/Property';
-import createOrder from './action';
 
 export default function OrderCreator() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
