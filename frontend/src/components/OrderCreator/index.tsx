@@ -130,9 +130,9 @@ export default function OrderCreator() {
           <ModalFooter>
             <Button
               radius="sm"
-              variant="faded"
               isDisabled={!title || !description}
               isLoading={isPending}
+              className="bg-black text-white"
               onPress={() => {
                 startTransition(async () => {
                   await createOrder(title, description, lab, priority);
