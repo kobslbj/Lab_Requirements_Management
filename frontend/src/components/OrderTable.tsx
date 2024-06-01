@@ -11,17 +11,17 @@ import {
 import StatusChip from './RowModal/StatusChip';
 import PriorityChip from './RowModal/PriorityChip';
 
+type Action = 'admin-view' | 'admin-edit' | 'worker-view';
 
 export default function OrderTable({
   orders,
   onRowAction,
-  actionType,
+  action,
 }: {
   orders: Order[];
   onRowAction: (id: Key) => void;
-  actionType: 'admin' | 'worker';
+  action: Action;
 }) {
-
   return (
     <Table
       aria-label="Example static collection table"
@@ -36,10 +36,10 @@ export default function OrderTable({
       <TableHeader>
         <TableColumn>標題</TableColumn>
         <TableColumn>品管工程師</TableColumn>
-        {actionType === 'admin' ? (
-          <TableColumn>實驗室</TableColumn>
-        ) : (
+        {action === 'worker-view' ? (
           <TableColumn>廠區</TableColumn>
+        ) : (
+          <TableColumn>實驗室</TableColumn>
         )}
         <TableColumn>優先序</TableColumn>
         <TableColumn>狀態</TableColumn>
@@ -49,10 +49,10 @@ export default function OrderTable({
           <TableRow key={order.id} onClick={() => onRowAction(order.id)}>
             <TableCell>{order.title}</TableCell>
             <TableCell>{order.creator}</TableCell>
-            {actionType === 'admin' ? (
-              <TableCell>{order.lab_name}</TableCell>
-            ) : (
+            {action === 'worker-view' ? (
               <TableCell>{order.fab_name}</TableCell>
+            ) : (
+              <TableCell>{order.lab_name}</TableCell>
             )}
             <TableCell>
               <PriorityChip order={order} />

@@ -15,7 +15,7 @@ export default async function AdminPage() {
             <AvatarButton name="Justin" position="Lab A" />
           </div>
         </div>
-        <TableWithModal orders={data} actionType="admin" />
+        <TableWithModal orders={data} action="admin-view" />
       </div>
     </div>
   );

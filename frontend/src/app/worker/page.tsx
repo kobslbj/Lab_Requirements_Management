@@ -13,7 +13,7 @@ export default async function WorkerPage() {
           {/* TODO: 這邊再用props傳入使用者名稱和位置，我先用假資料 */}
           <AvatarButton name="Justin" position="Lab A" />
         </div>
-        <TableWithModal orders={data} actionType="worker" />
+        <TableWithModal orders={data} action="worker-view" />
       </div>
     </div>
   );
