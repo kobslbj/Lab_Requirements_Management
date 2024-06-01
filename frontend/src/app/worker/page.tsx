@@ -4,10 +4,6 @@ import AvatarButton from '@/components/Avatar';
 import { cookies } from 'next/headers';
 
 export default async function WorkerPage() {
-<<<<<<< HEAD
-  const res = await fetch('http://localhost:3000/mock/orders');
-  const { data }: { data: Order[] } = await res.json();
-=======
   const accessToken = cookies().get('accessToken')!.value;
   const res = await fetch(`${process.env.API_URL}/orders`, {
     headers: {
@@ -16,7 +12,6 @@ export default async function WorkerPage() {
   });
   const data: Order[] = await res.json();
 
->>>>>>> dev
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       <div className="flex flex-col gap-5">
