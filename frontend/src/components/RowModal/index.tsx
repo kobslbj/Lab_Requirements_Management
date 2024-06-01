@@ -122,6 +122,7 @@ export default function RowModal({
         <ModalFooter>
           <ActionButton
             order={activeOrder}
+            priority={priority}
             action={action}
             setAction={setAction}
             onClose={onClose}

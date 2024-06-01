@@ -27,18 +27,31 @@ export async function createOrder(
     },
     body: formData,
   });
+
   if (!res.ok) {
     throw new Error('Failed to create order');
   }
 
-  const data = await res.json();
-  console.log(data);
-
   revalidatePath('/');
 }
 
-export async function updateOrder() {
-  // Update order logic here
+export async function updateOrder(id: string, priority: number) {
+  const accessToken = cookies().get('accessToken')!.value;
+  const formData = new FormData();
+  formData.append('_id', id);
+  formData.append('priority', priority.toString());
+
+  const res = await fetch(`${process.env.API_URL}/orders`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to create order');
+  }
 
   revalidatePath('/');
 }

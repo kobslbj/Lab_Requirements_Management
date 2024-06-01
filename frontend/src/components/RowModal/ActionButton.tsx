@@ -7,11 +7,13 @@ type Action = 'admin-view' | 'admin-edit' | 'worker-view';
 
 export default function ActionButton({
   order,
+  priority,
   action,
   setAction,
   onClose,
 }: {
   order: Order;
+  priority: number;
   action: Action;
   setAction: (action: Action) => void;
   onClose: () => void;
@@ -38,7 +40,7 @@ export default function ActionButton({
 
         if (action === 'admin-edit') {
           startTransition(async () => {
-            await updateOrder();
+            await updateOrder(order._id, priority);
             setAction('admin-view');
             onClose();
           });
