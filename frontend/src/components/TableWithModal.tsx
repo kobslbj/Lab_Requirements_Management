@@ -8,17 +8,20 @@ import OrderTable from './OrderTable';
 import Filter from './Filter';
 import OrderCreator from './OrderCreator';
 
+export type Action = 'admin-view' | 'admin-edit' | 'worker-view';
+
 export default function TableWithModal({
   orders,
-  actionType,
+  action: defaultAction,
 }: {
   orders: Order[];
-  actionType: 'admin' | 'worker';
+  action: Action;
 }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [activeOrder, setActiveOrder] = useState<Order>();
   const [status, setStatus] = useState<boolean>();
   const [priority, setPriority] = useState<number>();
+  const [action, setAction] = useState<Action>(defaultAction);
 
   const onRowAction = (id: Key) => {
     const order = orders.find((o) => o.id === id);
@@ -53,19 +56,20 @@ export default function TableWithModal({
           onStatusChange={handleStatusChange}
           onPriorityChange={handlePriorityChange}
         />
-        {actionType === 'admin' && <OrderCreator />}
+        {action !== 'worker-view' && <OrderCreator />}
       </div>
       <OrderTable
         orders={filteredOrders}
         onRowAction={onRowAction}
-        actionType={actionType}
+        action={action}
       />
       {activeOrder !== undefined && (
         <RowModal
           activeOrder={activeOrder}
           isOpen={isOpen}
           onOpenChange={onOpenChange}
-          actionType={actionType}
+          action={action}
+          setAction={setAction}
         />
       )}
     </>
