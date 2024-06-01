@@ -11,7 +11,7 @@ const getOrders = async (user) => {
       query = { creator: user.email };
     }
     else {
-      query = { lab_id: user.department_name };
+      query = { lab_name: user.department_name };
     }
     let orders = await Order.find(query).populate("attachments.file");
     console.log("orders", orders);
@@ -63,7 +63,7 @@ const createOrder = async (orderData, creator, files) => {
     }
     // deal with creator
     orderData.creator = creator.email;
-    orderData.fab_id = creator.department_name;
+    orderData.fab_name = creator.department_name;
 
     const order = await Order.create(orderData);
     await session.commitTransaction();
@@ -96,7 +96,7 @@ const updateOrder = async (orderId, orderData, files, user) => {
     // if (orderData.description !== undefined) order.description = orderData.description;
     order.description = order.description + "\nUpdate priority " + order.priority + " => " + orderData.priority + " at " + new Date().toLocaleString();
     if (orderData.priority !== undefined) order.priority = orderData.priority;
-    if (orderData.lab_id !== undefined) order.lab_id = orderData.lab_id;
+    if (orderData.lab_name !== undefined) order.lab_name = orderData.lab_name;
 
     
     if (files && files.file) {
@@ -151,7 +151,7 @@ const markOrderAsCompleted = async (orderId, user) => {
     if (order.is_completed) {
       throw new Error("Order is already completed");
     }
-    if (order.lab_id !== user.department_name){
+    if (order.lab_name !== user.department_name){
       throw new Error("You are not allowed to mark this order as completed");
     }
 

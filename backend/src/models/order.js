@@ -15,8 +15,8 @@ const OrderSchema = mongoose.Schema(
     title: { type: String, required: true },
     description: { type: String, required: true },
     creator: { type: String, required: true },
-    fab_id: { type: String, required: true },
-    lab_id: { type: String, required: true },
+    fab_name: { type: String, required: true },
+    lab_name: { type: String, required: true },
     priority: { type: Number, required: true },
     is_completed: { type: Boolean, required: true, default: false },
     attachments: [
