@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { v4: uuidv4 } = require("uuid");
 
 const FileSchema = new mongoose.Schema({
   length: { type: Number, required: true },
@@ -21,7 +20,6 @@ const OrderSchema = mongoose.Schema(
     is_completed: { type: Boolean, required: true, default: false },
     attachments: [
       {
-        uuid: { type: String, default: uuidv4 },
         file: { type: mongoose.Schema.Types.ObjectId, ref: "uploads.files" },
       },
     ],
