@@ -8,7 +8,7 @@ export async function createOrder(
   description: string,
   lab: string,
   priority: number,
-  file: File | null
+  file: File | null,
 ) {
   const accessToken = cookies().get('accessToken')!.value;
 
@@ -20,9 +20,7 @@ export async function createOrder(
   if (file) {
     formData.append('file', file);
   }
-  console.log(file)
-  console.log(formData)
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+  const res = await fetch(`${process.env.API_URL}/orders`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -45,8 +43,20 @@ export async function updateOrder() {
   revalidatePath('/');
 }
 
-export async function completeOrder() {
-  // Complete order logic here
+export async function completeOrder(id: string) {
+  const accessToken = cookies().get('accessToken')!.value;
+
+  const res = await fetch(`${process.env.API_URL}/orders/${id}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!res.ok) {
+    console.error('Failed to complete order');
+    return;
+  }
 
   revalidatePath('/');
 }

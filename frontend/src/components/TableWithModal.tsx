@@ -17,7 +17,7 @@ export default function TableWithModal({
   orders: Order[];
   action: Action;
 }) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [activeOrder, setActiveOrder] = useState<Order>();
   const [status, setStatus] = useState<boolean>();
   const [priority, setPriority] = useState<number>();
@@ -70,6 +70,7 @@ export default function TableWithModal({
           onOpenChange={onOpenChange}
           action={action}
           setAction={setAction}
+          onClose={onClose}
         />
       )}
     </>
