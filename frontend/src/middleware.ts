@@ -12,7 +12,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
-  if (request.nextUrl.pathname === '/') {
+  if (
+    request.nextUrl.pathname === '/' ||
+    request.nextUrl.pathname === '/admin' ||
+    request.nextUrl.pathname === '/worker'
+  ) {
     if (position?.value === 'Fab') {
       return NextResponse.rewrite(new URL('/admin', request.url));
     }
