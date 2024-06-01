@@ -1,15 +1,40 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 
 export async function createOrder(
   title: string,
   description: string,
   lab: string,
   priority: number,
+  file: File | null
 ) {
-  console.log('Creating order...');
-  console.log(title, description, lab, priority);
+  const accessToken = cookies().get('accessToken')!.value;
+
+  const formData = new FormData();
+  formData.append('title', title);
+  formData.append('description', description);
+  formData.append('lab_name', lab);
+  formData.append('priority', priority.toString());
+  if (file) {
+    formData.append('file', file);
+  }
+  console.log(file)
+  console.log(formData)
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: formData,
+  });
+  if (!res.ok) {
+    throw new Error('Failed to create order');
+  }
+
+  const data = await res.json();
+  console.log(data);
 
   revalidatePath('/');
 }

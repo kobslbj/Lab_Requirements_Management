@@ -18,7 +18,7 @@ import {
 } from '@nextui-org/react';
 import { useState, useTransition } from 'react';
 import { createOrder } from '@/actions/order';
-import { Lab, Priority } from '../Icons';
+import { Lab, Priority, Upload } from '../Icons';
 import Property from '../RowModal/Property';
 
 export default function OrderCreator() {
@@ -28,7 +28,28 @@ export default function OrderCreator() {
   const [lab, setLab] = useState('化學實驗室');
   const [priority, setPriority] = useState(3);
   const [isPending, startTransition] = useTransition();
-
+  const [file, setFile] = useState<File | null>(null);
+  const fileData = file
+    ? {
+        name: file.name,
+        lastModified: file.lastModified,
+        size: file.size,
+        type: file.type,
+      }
+    : null;
+  const handleSubmit = async () => {
+    await createOrder(title, description, lab, priority, fileData as File);
+    onClose();
+    setTitle('');
+    setDescription('');
+    setLab('化學實驗室');
+    setPriority(3);
+    setFile(null);
+  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files ? e.target.files[0] : null;
+    setFile(selectedFile);
+  };
   return (
     <>
       <Button
@@ -126,6 +147,29 @@ export default function OrderCreator() {
               value={description}
               onValueChange={setDescription}
             />
+            <Divider />
+            <div className="flex items-center gap-4">
+              <Button
+                radius="sm"
+                size="lg"
+                variant="bordered"
+                onPress={() => {
+                  document.getElementById('file-input')?.click();
+                }}
+                className="flex items-center gap-2 rounded border border-gray-300 bg-gray-100 px-4 py-2"
+              >
+                <Upload />
+                <span>選擇檔案</span>
+              </Button>
+              <input
+                id="file-input"
+                type="file"
+                onChange={handleFileChange}
+                accept=".pdf"
+                className="hidden"
+              />
+              <span>{file ? file.name : '未選擇任何檔案'}</span>
+            </div>
           </ModalBody>
           <ModalFooter>
             <Button
@@ -134,14 +178,7 @@ export default function OrderCreator() {
               isLoading={isPending}
               className="bg-black text-white"
               onPress={() => {
-                startTransition(async () => {
-                  await createOrder(title, description, lab, priority);
-                  onClose();
-                  setTitle('');
-                  setDescription('');
-                  setLab('化學實驗室');
-                  setPriority(3);
-                });
+                startTransition(handleSubmit);
               }}
             >
               新增
