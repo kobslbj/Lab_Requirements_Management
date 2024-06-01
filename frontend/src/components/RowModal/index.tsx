@@ -22,12 +22,14 @@ export default function RowModal({
   onOpenChange,
   action,
   setAction,
+  onClose,
 }: {
   activeOrder: Order;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   action: Action;
   setAction: (action: Action) => void;
+  onClose: () => void;
 }) {
   const [priority, setPriority] = useState(activeOrder.priority);
 
@@ -118,7 +120,12 @@ export default function RowModal({
           {activeOrder.description}
         </ModalBody>
         <ModalFooter>
-          <ActionButton action={action} setAction={setAction} />
+          <ActionButton
+            order={activeOrder}
+            action={action}
+            setAction={setAction}
+            onClose={onClose}
+          />
         </ModalFooter>
       </ModalContent>
     </Modal>
