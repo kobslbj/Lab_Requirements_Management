@@ -46,7 +46,7 @@ export default function OrderTable({
       </TableHeader>
       <TableBody>
         {orders.map((order) => (
-          <TableRow key={order.id} onClick={() => onRowAction(order.id)}>
+          <TableRow key={order._id} onClick={() => onRowAction(order._id)}>
             <TableCell>{order.title}</TableCell>
             <TableCell>{order.creator}</TableCell>
             {action === 'worker-view' ? (

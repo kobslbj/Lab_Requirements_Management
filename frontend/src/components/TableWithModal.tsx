@@ -24,7 +24,7 @@ export default function TableWithModal({
   const [action, setAction] = useState<Action>(defaultAction);
 
   const onRowAction = (id: Key) => {
-    const order = orders.find((o) => o.id === id);
+    const order = orders.find((o) => o._id === id);
     setActiveOrder(order);
     onOpen();
   };
