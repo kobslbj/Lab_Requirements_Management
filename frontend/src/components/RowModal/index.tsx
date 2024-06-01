@@ -45,7 +45,7 @@ export default function RowModal({
                 </>
               }
             >
-              {activeOrder.id}
+              {activeOrder._id}
             </Property>
             {action === 'worker-view' ? (
               <Property
