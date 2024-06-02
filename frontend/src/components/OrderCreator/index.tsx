@@ -28,11 +28,10 @@ export default function OrderCreator() {
   const [description, setDescription] = useState('');
   const [lab, setLab] = useState('化學實驗室');
   const [priority, setPriority] = useState(3);
-  const [isPending, startTransition] = useTransition();
   const [file, setFile] = useState<File | null>(null);
 
+
   const handleSubmit = async () => {
-    await createOrder(title, description, lab, priority, file);
     onClose();
     setTitle('');
     setDescription('');
@@ -62,9 +61,10 @@ export default function OrderCreator() {
         onOpenChange={onOpenChange}
       >
         <ModalContent>
-          <form action={handleSubmit}>
+          <form action={createOrder} onSubmit={handleSubmit}>
             <ModalHeader className="text-xl">
               <Input
+                name ="title"
                 aria-label="委託單名稱"
                 variant="faded"
                 size="lg"
@@ -85,6 +85,7 @@ export default function OrderCreator() {
                   }
                 >
                   <Select
+                    name='lab_name'
                     aria-label="實驗室"
                     variant="faded"
                     size="sm"
@@ -112,6 +113,7 @@ export default function OrderCreator() {
                   }
                 >
                   <Select
+                    name='priority'
                     aria-label="優先序"
                     variant="faded"
                     size="sm"
@@ -150,6 +152,7 @@ export default function OrderCreator() {
               </div>
               <Divider />
               <Textarea
+                name='description'
                 aria-label="委託單內容"
                 variant="faded"
                 radius="sm"
@@ -172,6 +175,7 @@ export default function OrderCreator() {
                   <span>選擇檔案</span>
                 </Button>
                 <input
+                  name='attachments'
                   id="file-input"
                   type="file"
                   onChange={handleFileChange}
