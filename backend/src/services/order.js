@@ -84,7 +84,7 @@ const updateOrder = async (orderId, orderData, files, user) => {
     if (order.is_completed) {
       throw new Error("Order is already completed");
     }
-    if (order.creator !== user.email + user.name) {
+    if (order.creator !== user.email + " " + user.name) {
       throw new Error("You are not allowed to update this order");
     }
 
