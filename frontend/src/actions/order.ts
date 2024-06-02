@@ -6,13 +6,7 @@ import { cookies } from 'next/headers';
 export async function createOrder(
   formData: FormData
 ) {
-  const accessToken = cookies().get('accessToken')!.value;
-
-  const title = formData.get('title') as string;
-  const description = formData.get('description') as string;
-  const lab_name = formData.get('lab_name') as string;
-  const priority = formData.get('priority') as string;
-  const attachments = formData.get('file') as File | null;
+  const accessToken = cookies().get('accessToken')!.value
 
   const res = await fetch(`${process.env.API_URL}/orders`, {
     method: 'POST',

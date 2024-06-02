@@ -175,7 +175,7 @@ export default function OrderCreator() {
                   <span>選擇檔案</span>
                 </Button>
                 <input
-                  name='attachments'
+                  name='file'
                   id="file-input"
                   type="file"
                   onChange={handleFileChange}
