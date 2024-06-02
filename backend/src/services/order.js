@@ -163,9 +163,21 @@ const markOrderAsCompleted = async (orderId, user) => {
   }
 };
 
+const getFileStream = async (fileId) => {
+  try {
+    const bucket = new GridFSBucket(mongoose.connection.db, {
+      bucketName: 'uploads'
+    });
+    return bucket.openDownloadStream(new mongoose.Types.ObjectId(fileId));
+  } catch (error) {
+    throw new Error('File could not be retrieved: ' + error.message);
+  }
+};
+
 module.exports = {
   getOrders,
   createOrder,
   updateOrder,
   markOrderAsCompleted,
+  getFileStream,
 };

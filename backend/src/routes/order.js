@@ -4,10 +4,32 @@ const {
   createOrder,
   updateOrder,
   markOrderAsCompleted,
+  getFileStream,
 } = require("../services/order.js");
 const authenticateToken = require("../middleware/authenticateToken");
 const router = express.Router();
 
+
+router.get('/files/:fileId', async (req, res) => {
+  try {
+    const downloadStream = await getFileStream(req.params.fileId);
+
+    downloadStream.on('data', (chunk) => {
+      res.write(chunk);
+    });
+
+    downloadStream.on('error', () => {
+      res.sendStatus(404);
+    });
+
+    downloadStream.on('end', () => {
+      res.end();
+    });
+  } catch (error) {
+    console.error('Error fetching file:', error);
+    res.status(500).send('Error fetching file: ' + error.message);
+  }
+});
 // get all orders
 router.get("/", authenticateToken, async (req, res) => {
   try {
