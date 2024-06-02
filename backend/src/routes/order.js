@@ -22,8 +22,6 @@ router.get("/", authenticateToken, async (req, res) => {
 // create order
 router.post("/", authenticateToken, async (req, res) => {
   try {
-    console.log(req)
-    console.log("req.files", req.files)
     const order = await createOrder(req.body, req.user, req.files);
     res.status(200).json(order);
   } catch (error) {
