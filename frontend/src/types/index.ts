@@ -15,7 +15,7 @@ export type LabStaff = {
 };
 
 export type Order = {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   creator: string;

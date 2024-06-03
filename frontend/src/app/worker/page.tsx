@@ -1,10 +1,16 @@
 import TableWithModal from '@/components/TableWithModal';
 import { Order } from '@/types';
 import AvatarButton from '@/components/Avatar';
+import { cookies } from 'next/headers';
 
 export default async function WorkerPage() {
-  const res = await fetch('http://localhost:3000/mock/orders');
-  const { data }: { data: Order[] } = await res.json();
+  const accessToken = cookies().get('accessToken')!.value;
+  const res = await fetch(`${process.env.API_URL}/orders`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  const data: Order[] = await res.json();
 
   return (
     <div className="flex h-screen flex-col items-center justify-center">

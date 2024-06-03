@@ -7,7 +7,7 @@ const getOrders = async (user) => {
   try {
     let query = {};
     if (user.department_name === "Fab A" || user.department_name === "Fab B" || user.department_name === "Fab C") {
-      query = { creator: user.email };
+      query = { creator: user.email + " " + user.name};
     }
     else {
       query = { lab_name: user.department_name };
@@ -59,7 +59,7 @@ const createOrder = async (orderData, creator, files) => {
       orderData.attachments = attachments;
     }
     // deal with creator
-    orderData.creator = creator.email;
+    orderData.creator = creator.email + " " + creator.name;
     orderData.fab_name = creator.department_name;
 
     const order = await Order.create(orderData);
@@ -84,7 +84,7 @@ const updateOrder = async (orderId, orderData, files, user) => {
     if (order.is_completed) {
       throw new Error("Order is already completed");
     }
-    if (order.creator !== user.email) {
+    if (order.creator !== user.email + " " + user.name) {
       throw new Error("You are not allowed to update this order");
     }
 
@@ -163,9 +163,21 @@ const markOrderAsCompleted = async (orderId, user) => {
   }
 };
 
+const getFileStream = async (fileId) => {
+  try {
+    const bucket = new GridFSBucket(mongoose.connection.db, {
+      bucketName: 'uploads'
+    });
+    return bucket.openDownloadStream(new mongoose.Types.ObjectId(fileId));
+  } catch (error) {
+    throw new Error('File could not be retrieved: ' + error.message);
+  }
+};
+
 module.exports = {
   getOrders,
   createOrder,
   updateOrder,
   markOrderAsCompleted,
+  getFileStream,
 };
