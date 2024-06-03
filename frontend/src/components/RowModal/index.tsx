@@ -6,9 +6,10 @@ import {
   ModalFooter,
 } from '@nextui-org/modal';
 import { Order } from '@/types';
-import { Divider, Select, SelectItem } from '@nextui-org/react';
-import { useState } from 'react';
-import { Fab, ID, Lab, Priority, Status } from '../Icons';
+import { Divider, Select, SelectItem, Chip } from '@nextui-org/react';
+import { Key, useState } from 'react';
+import { Clip, Fab, ID, Lab, Priority, Status, Upload } from '../Icons';
+import { Link } from '@nextui-org/react';
 import StatusChip from './StatusChip';
 import PriorityChip from './PriorityChip';
 import Property from './Property';
@@ -113,6 +114,34 @@ export default function RowModal({
                 </Select>
               ) : (
                 <PriorityChip order={activeOrder} />
+              )}
+            </Property>
+
+            <Property
+              name={
+                <>
+                  <Upload />
+                  附件
+                </>
+              }
+            >
+              {activeOrder.attachments.length === 0 ? (
+                <Chip startContent={<Clip />} variant="flat" radius="sm">
+                  無附件
+                </Chip>
+              ) : (
+                activeOrder.attachments.map((attachment: any, index: any) => (
+                  <a
+                    key={index}
+                    href={`${process.env.NEXT_PUBLIC_API_URL}/orders/files/${attachment.file._id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Chip startContent={<Clip />} variant="flat" radius="sm">
+                      {attachment.file.filename}
+                    </Chip>
+                  </a>
+                ))
               )}
             </Property>
           </div>

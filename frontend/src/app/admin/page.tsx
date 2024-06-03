@@ -11,10 +11,10 @@ export default async function AdminPage() {
     },
   });
   const data: Order[] = await res.json();
-
+  
   const name = cookies().get('name')!.value;
   const position = cookies().get('position')!.value;
-
+  
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       <div className="flex flex-col gap-5">
