@@ -23,7 +23,7 @@ app.use("/api/orders", orderRoute);
 app.use("/api/staffs", staffRoute);
 
 const mongoURI = process.env.MONGO_URI;
-const port = process.env.PORT || 8888;
+const port = process.env.BACKEND_PORT || 8888;
 
 mongoose
   .connect(mongoURI)

@@ -12,15 +12,13 @@ export default async function WorkerPage() {
   });
   const data: Order[] = await res.json();
 
-  const name = cookies().get('name')!.value;
-  const position = cookies().get('position')!.value;
-
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
           <div className="text-3xl font-bold">委託單列表</div>
-          <AvatarButton name={name} position={position} />
+          {/* TODO: 這邊再用props傳入使用者名稱和位置，我先用假資料 */}
+          <AvatarButton name="Justin" position="Lab A" />
         </div>
         <TableWithModal orders={data} action="worker-view" />
       </div>
