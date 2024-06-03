@@ -133,7 +133,7 @@ export default function RowModal({
                 activeOrder.attachments.map((attachment: any, index: any) => (
                   <a
                     key={index}
-                    href={`http://35.232.205.163:3000/api/files/${attachment.file._id}`}
+                    href={`${process.env.NEXT_PUBLIC_API_URL}/orders/files/${attachment.file._id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
