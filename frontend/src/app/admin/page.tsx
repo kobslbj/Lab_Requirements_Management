@@ -11,7 +11,7 @@ export default async function AdminPage() {
     },
   });
   const data: Order[] = await res.json();
-
+  console.log(data);
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       <div className="flex flex-col gap-5">
