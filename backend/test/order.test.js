@@ -17,6 +17,7 @@ const secretKey = "secretkey";
 
 let app;
 let token;
+let user;
 
 beforeAll(async () => {
   const uri = "mongodb://localhost:27017/test";
@@ -30,18 +31,20 @@ beforeAll(async () => {
   app.use("/api/staffs", staffRoute);
 
   // Create a test user with a valid department name
-  const staff = await Staff.create({
-    email: "testuser@example.com",
-    password: "password",
-    department_name: "Fab A", // Valid department name
+  user = await Staff.create({
+    email: "seanmamasde@example.com",
+    name: "seanmamasde",
+    password: "seanmamasdes_password",
+    department_name: "化學實驗室", // Valid department name
   });
 
   // Generate a valid JWT token
   token = jwt.sign(
     {
-      email: staff.email,
-      id: staff._id,
-      department_name: staff.department_name,
+      email: user.email,
+      id: user._id,
+      department_name: user.department_name,
+      name: user.name,
     },
     secretKey,
     { expiresIn: "1h" }
@@ -65,11 +68,11 @@ describe("Order API", () => {
     const response = await request(app)
       .post("/api/orders")
       .set("Authorization", `Bearer ${token}`)
-      .field("title", 123)
+      .field("title", "order with 1 pdf file.")
       .field("description", "Test order")
       .field("creator", "test_creator")
-      .field("fab_id", "fab123")
-      .field("lab_id", "lab123")
+      .field("fab_name", "Fab A")
+      .field("lab_name", "化學實驗室")
       .field("priority", 1)
       .attach("file", pdfPath);
 
@@ -99,11 +102,11 @@ describe("Order API", () => {
     const response = await request(app)
       .post("/api/orders")
       .set("Authorization", `Bearer ${token}`)
-      .field("title", 124)
+      .field("title", "order with 2 pdf files.")
       .field("description", "Test order with two PDFs")
       .field("creator", "test_creator")
-      .field("fab_id", "fab124")
-      .field("lab_id", "lab124")
+      .field("fab_name", "Fab A")
+      .field("lab_name", "化學實驗室")
       .field("priority", 2)
       .attach("file", pdfPath1)
       .attach("file", pdfPath2);
@@ -132,36 +135,45 @@ describe("Order API", () => {
     const createResponse = await request(app)
       .post("/api/orders")
       .set("Authorization", `Bearer ${token}`)
-      .field("title", 125)
+      .field("title", "this is a test order for update.")
       .field("description", "Order to be updated")
       .field("creator", "test_creator")
-      .field("fab_id", "fab125")
-      .field("lab_id", "lab125")
+      .field("fab_name", "Fab A")
+      .field("lab_name", "化學實驗室")
       .field("priority", 3)
       .attach("file", pdfPath);
 
     expect(createResponse.status).toBe(200);
 
+    console.log("Created Order:", createResponse.body);
+
+    // Add a delay to ensure the database has committed the new document
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     // Find the created order by title
-    const [orderToUpdate] = await getOrders(125);
-    const orderId = orderToUpdate._id.toString();
+    const query = { title: "this is a test order for update." };
+    const orders = await getOrders(query, user);
+    console.log("Orders fetched:", orders);
+    const orderId = orders[0]?._id.toString();
+
+    // Check if the order was found
+    expect(orderId).toBeDefined();
 
     // Update the order
     const updateResponse = await request(app)
-      .put("/api/orders")
+      .put(`/api/orders/${orderId}`)
       .set("Authorization", `Bearer ${token}`)
-      .field("_id", orderId) // Ensure _id is included in the request body
-      .field("title", 126)
+      .field("title", "this is the updated title.")
       .field("description", "Updated description")
       .field("priority", 4)
-      .field("lab_id", "updated_lab125")
+      .field("lab_name", "表面分析實驗室")
       .attach("file", pdfPath);
 
     expect(updateResponse.status).toBe(200);
-    expect(updateResponse.body.title).toBe(126);
+    expect(updateResponse.body.title).toBe("this is the updated title.");
     expect(updateResponse.body.description).toBe("Updated description");
     expect(updateResponse.body.priority).toBe(4);
-    expect(updateResponse.body.lab_id).toBe("updated_lab125");
+    expect(updateResponse.body.lab_name).toBe("表面分析實驗室");
     expect(updateResponse.body.attachments).toHaveLength(1);
     expect(updateResponse.body.attachments[0]).toHaveProperty("_id");
     expect(updateResponse.body.attachments[0]).toHaveProperty("file");
@@ -172,30 +184,33 @@ describe("Order API", () => {
 
   it("should mark an order as completed", async () => {
     // Create a simple PDF file
-    const pdfPath = path.join(__dirname, "updateTest.pdf");
+    const pdfPath = path.join(__dirname, "completeTest.pdf");
     const doc = new PDFDocument();
     doc.pipe(fs.createWriteStream(pdfPath));
-    doc.text("This is a test PDF file for update.");
+    doc.text("This is a test PDF file for completion.");
     doc.end();
 
     // Create an order to update
     const createResponse = await request(app)
       .post("/api/orders")
       .set("Authorization", `Bearer ${token}`)
-      .field("title", 127)
+      .field("title", "this is a test order for completion.")
       .field("description", "Order to be marked as completed")
       .field("creator", "test_creator")
-      .field("fab_id", "fab127")
-      .field("lab_id", "lab127")
+      .field("fab_name", "Fab A")
+      .field("lab_name", "化學實驗室")
       .field("priority", 3)
       .attach("file", pdfPath);
 
     expect(createResponse.status).toBe(200);
     const orderId = createResponse.body._id;
 
+    // Add a delay to ensure the database has committed the new document
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     // Mark the order as completed
     const completeResponse = await request(app)
-      .put(`/api/orders/${orderId}`)
+      .put(`/api/orders/${orderId}/complete`)
       .set("Authorization", `Bearer ${token}`);
 
     expect(completeResponse.status).toBe(200);
@@ -226,7 +241,7 @@ describe("Order API", () => {
             .createHash("md5")
             .update(buffer)
             .digest("hex");
-          expect(file.metadata.md5).toBe(expectedHash);
+          expect(file.md5).toBe(expectedHash);
           resolve();
         });
         downloadStream.on("error", reject);
@@ -237,7 +252,7 @@ describe("Order API", () => {
     expect(Array.isArray(files)).toBe(true);
 
     // Print all orders in the MongoDB database
-    const orders = await getOrders();
+    const orders = await getOrders({}, user);
     console.log("Orders in MongoDB:", JSON.stringify(orders, null, 2));
   });
 });

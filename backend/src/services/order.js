@@ -3,21 +3,56 @@ const { GridFSBucket } = require("mongodb");
 const crypto = require("crypto");
 const { Order, File } = require("../models/order.js");
 
-const getOrders = async (user) => {
+// const getOrders = async (user) => {
+//   try {
+//     let query = {};
+//     if (user.department_name === "Fab A" || user.department_name === "Fab B" || user.department_name === "Fab C") {
+//       query = { creator: user.email };
+//     }
+//     else {
+//       query = { lab_name: user.department_name };
+//     }
+//     let orders = await Order.find(query).populate("attachments.file");
+//     console.log("orders", orders);
+//     orders.sort((a, b) => b.createdAt - a.createdAt);
+//     orders.sort((a, b) => a.priority - b.priority);
+//     orders.sort((a, b) => (a.is_completed === b.is_completed)? 0 : a.is_completed? 1 : -1);
+
+//     return orders;
+//   } catch (error) {
+//     throw new Error(error.message);
+//   }
+// };
+
+const getOrders = async (filters = {}, user) => {
+  console.log("user", user);
+  console.log("filters", filters);
   try {
     let query = {};
-    if (user.department_name === "Fab A" || user.department_name === "Fab B" || user.department_name === "Fab C") {
-      query = { creator: user.email + " " + user.name};
+    if (
+      user.department_name === "Fab A" ||
+      user.department_name === "Fab B" ||
+      user.department_name === "Fab C"
+    ) {
+      query.creator = user.email;
+    } else {
+      query.lab_name = user.department_name;
     }
-    else {
-      query = { lab_name: user.department_name };
-    }
+
+    // merge additional filters
+    query = { ...query, ...filters };
+    console.log("query", query);
+
+    // fetch orders from database
     let orders = await Order.find(query).populate("attachments.file");
-    console.log("orders", orders);
+
+    // sort orders
     orders.sort((a, b) => b.createdAt - a.createdAt);
     orders.sort((a, b) => a.priority - b.priority);
-    orders.sort((a, b) => (a.is_completed === b.is_completed)? 0 : a.is_completed? 1 : -1);
-  
+    orders.sort((a, b) =>
+      a.is_completed === b.is_completed ? 0 : a.is_completed ? 1 : -1
+    );
+
     return orders;
   } catch (error) {
     throw new Error(error.message);
@@ -52,7 +87,6 @@ const createOrder = async (orderData, creator, files) => {
               reject(error);
             });
           });
-        } else {
         }
       }
 
@@ -91,11 +125,17 @@ const updateOrder = async (orderId, orderData, files, user) => {
     // Update order fields
     if (orderData.title !== undefined) order.title = orderData.title;
     // if (orderData.description !== undefined) order.description = orderData.description;
-    order.description = order.description + "\nUpdate priority " + order.priority + " => " + orderData.priority + " at " + new Date().toLocaleString();
+    order.description =
+      order.description +
+      "\nUpdate priority " +
+      order.priority +
+      " => " +
+      orderData.priority +
+      " at " +
+      new Date().toLocaleString();
     if (orderData.priority !== undefined) order.priority = orderData.priority;
     if (orderData.lab_name !== undefined) order.lab_name = orderData.lab_name;
 
-    
     if (files && files.file) {
       const attachments = [];
       const bucket = new GridFSBucket(mongoose.connection.db, {
@@ -147,11 +187,16 @@ const markOrderAsCompleted = async (orderId, user) => {
     if (order.is_completed) {
       throw new Error("Order is already completed");
     }
-    if (order.lab_name !== user.department_name){
+    if (order.lab_name !== user.department_name) {
       throw new Error("You are not allowed to mark this order as completed");
     }
 
-    order.description = order.description + "\nMark as completed by " + user.email + " at " + new Date().toLocaleString();
+    order.description =
+      order.description +
+      "\nMark as completed by " +
+      user.email +
+      " at " +
+      new Date().toLocaleString();
 
     order.is_completed = true;
 

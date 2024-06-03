@@ -33,7 +33,8 @@ router.get('/files/:fileId', async (req, res) => {
 // get all orders
 router.get("/", authenticateToken, async (req, res) => {
   try {
-    const orders = await getOrders(req.user);
+    const filters = req.query;
+    const orders = await getOrders(filters, req.user);
     res.status(200).json(orders);
   } catch (error) {
     console.error("Error fetching orders:", error);
@@ -56,7 +57,12 @@ router.post("/", authenticateToken, async (req, res) => {
 router.put("/", authenticateToken, async (req, res) => {
   try {
     const orderId = req.body._id; // Ensure _id is included in the request body
-    const updatedOrder = await updateOrder(orderId, req.body, req.files, req.user);
+    const updatedOrder = await updateOrder(
+      orderId,
+      req.body,
+      req.files,
+      req.user
+    );
     res.status(200).json(updatedOrder);
   } catch (error) {
     console.error("Error updating order:", error);
