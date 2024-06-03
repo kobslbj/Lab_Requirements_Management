@@ -10,7 +10,7 @@ const {
 const authenticateToken = require("../middleware/authenticateToken");
 const router = express.Router();
 
-router.get("/files/:fileId", async (req, res) => {
+router.get("/files/:fileId", authenticateToken, async (req, res) => {
   try {
     const fileId = new mongoose.Types.ObjectId(req.params.fileId);
     console.log(`Fetching file with ID: ${fileId}`);
