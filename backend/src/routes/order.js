@@ -1,17 +1,47 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const {
   getOrders,
   createOrder,
   updateOrder,
   markOrderAsCompleted,
+  getFileStream,
 } = require("../services/order.js");
 const authenticateToken = require("../middleware/authenticateToken");
 const router = express.Router();
 
+router.get("/files/:fileId", async (req, res) => {
+  try {
+    const fileId = new mongoose.Types.ObjectId(req.params.fileId);
+    console.log(`Fetching file with ID: ${fileId}`);
+
+    const downloadStream = await getFileStream(fileId);
+
+    res.setHeader("Content-Type", "application/pdf");
+
+    downloadStream.on("data", (chunk) => {
+      res.write(chunk);
+    });
+
+    downloadStream.on("error", (err) => {
+      console.error("Download stream error:", err);
+      res.sendStatus(404);
+    });
+
+    downloadStream.on("end", () => {
+      res.end();
+    });
+  } catch (error) {
+    console.error("Error fetching file:", error);
+    res.status(500).send("Error fetching file: " + error.message);
+  }
+});
+
 // get all orders
 router.get("/", authenticateToken, async (req, res) => {
   try {
-    const orders = await getOrders(req.user);
+    const filters = req.query;
+    const orders = await getOrders(filters, req.user);
     res.status(200).json(orders);
   } catch (error) {
     console.error("Error fetching orders:", error);
@@ -22,8 +52,6 @@ router.get("/", authenticateToken, async (req, res) => {
 // create order
 router.post("/", authenticateToken, async (req, res) => {
   try {
-    console.log(req)
-    console.log("req.files", req.files)
     const order = await createOrder(req.body, req.user, req.files);
     res.status(200).json(order);
   } catch (error) {
@@ -36,7 +64,12 @@ router.post("/", authenticateToken, async (req, res) => {
 router.put("/", authenticateToken, async (req, res) => {
   try {
     const orderId = req.body._id; // Ensure _id is included in the request body
-    const updatedOrder = await updateOrder(orderId, req.body, req.files, req.user);
+    const updatedOrder = await updateOrder(
+      orderId,
+      req.body,
+      req.files,
+      req.user
+    );
     res.status(200).json(updatedOrder);
   } catch (error) {
     console.error("Error updating order:", error);

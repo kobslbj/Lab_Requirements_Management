@@ -65,7 +65,7 @@ const signinStaff = async (req, res) => {
     
     // Generate JWT
     const token = jwt.sign(
-      { email: staff.email, id: staff._id, department_name: staff.department_name },
+      { email: staff.email, id: staff._id, name: staff.name, department_name: staff.department_name },
       secretKey,
       { expiresIn: '1h' }
     );
@@ -77,7 +77,7 @@ const signinStaff = async (req, res) => {
       position = 'Lab';
     }
 
-    return res.status(200).json({ token, position });
+    return res.status(200).json({ token, position, name:staff.name });
   } catch (err) {
     console.error("Error signing in staff", err);
     // console.error(err);

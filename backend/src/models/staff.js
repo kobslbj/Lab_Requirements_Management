@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Staff_Schema = mongoose.Schema(
   {
     email: { type: String, required: true },
+    name: {type: String, required: true},
     password: { type: String, required: true },
     department_name: {
       type: String,

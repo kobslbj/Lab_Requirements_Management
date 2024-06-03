@@ -27,8 +27,9 @@ beforeAll(async () => {
 
   // Create a test user with a valid department name
   const staff = await Staff.create({
-    email: "testuser@example.com",
-    password: "password",
+    email: "seanmamasde@example.com",
+    name: "seanmamasde",
+    password: "seanmamasdes_password",
     department_name: "Fab A", // Valid department name
   });
 
@@ -38,6 +39,7 @@ beforeAll(async () => {
       email: staff.email,
       id: staff._id,
       department_name: staff.department_name,
+      name: staff.name,
     },
     secretKey,
     { expiresIn: "1h" }
@@ -61,17 +63,17 @@ describe("JWT Authentication", () => {
     const response = await request(app)
       .post("/api/orders")
       .set("Authorization", `Bearer ${token}`)
-      .field("title", 123) // Title as number
+      .field("title", "an order with a valid token")
       .field("description", "Order created with a valid token")
-      .field("priority", 1)
-      .field("lab_id", "lab123")
       .field("creator", "test_creator") // Adding required creator field
-      .field("fab_id", "fab123") // Adding required fab_id field
+      .field("priority", 1)
+      .field("lab_name", "化學實驗室")
+      .field("fab_name", "Fab A")
       .attach("file", pdfPath);
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("_id");
-    expect(response.body.title).toBe("123");
+    expect(response.body.title).toBe("an order with a valid token");
 
     // Clean up
     fs.unlinkSync(pdfPath);
@@ -80,12 +82,12 @@ describe("JWT Authentication", () => {
   it("should fail to create an order without a token", async () => {
     const response = await request(app)
       .post("/api/orders")
-      .field("title", 124) // Title as number
+      .field("title", "an order failed since it's without token")
       .field("description", "Order created without a token")
       .field("priority", 1)
-      .field("lab_id", "lab123")
-      .field("creator", "test_creator") // Adding required creator field
-      .field("fab_id", "fab123"); // Adding required fab_id field
+      .field("lab_name", "化學實驗室")
+      .field("creator", "test_creator")
+      .field("fab_name", "Fab A");
 
     expect(response.status).toBe(401);
     expect(response.body.message).toBe("Token missing");
@@ -95,12 +97,12 @@ describe("JWT Authentication", () => {
     const response = await request(app)
       .post("/api/orders")
       .set("Authorization", "Bearer invalidtoken")
-      .field("title", 125) // Title as number
+      .field("title", "an order failed cus token invalid")
       .field("description", "Order created with an invalid token")
+      .field("creator", "test_creator")
       .field("priority", 1)
-      .field("lab_id", "lab123")
-      .field("creator", "test_creator") // Adding required creator field
-      .field("fab_id", "fab123"); // Adding required fab
+      .field("lab_name", "化學實驗室")
+      .field("fab_name", "Fab A");
 
     expect(response.status).toBe(403);
     expect(response.body.message).toBe("Token invalid");

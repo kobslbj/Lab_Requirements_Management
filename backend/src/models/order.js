@@ -11,13 +11,42 @@ const FileSchema = new mongoose.Schema({
 
 const OrderSchema = mongoose.Schema(
   {
-    title: { type: String, required: true },
-    description: { type: String, required: true },
-    creator: { type: String, required: true },
-    fab_name: { type: String, required: true },
-    lab_name: { type: String, required: true },
+    title: { type: String, required: true, index: true },
+    description: { type: String, required: true, index: true },
+    creator: { type: String, required: true, index: true },
+    fab_name: {
+      type: String,
+      required: true,
+      index: true,
+      validate: {
+        validator: function (value) {
+          return ["Fab A", "Fab B", "Fab C"].includes(value);
+        },
+      },
+      message: (props) =>
+        `${props.value} is not a valid fab name. Fab name must be one of: Fab A, Fab B, Fab C`,
+    },
+    lab_name: {
+      type: String,
+      required: true,
+      index: true,
+      validate: {
+        validator: function (value) {
+          return ["化學實驗室", "表面分析實驗室", "成分分析實驗室"].includes(
+            value
+          );
+        },
+      },
+      message: (props) =>
+        `${props.value} is not a valid lab name. Lab name must be one of: 化學實驗室, 表面分析實驗室, 成分分析實驗室`,
+    },
     priority: { type: Number, required: true },
-    is_completed: { type: Boolean, required: true, default: false },
+    is_completed: {
+      type: Boolean,
+      required: true,
+      default: false,
+      index: true,
+    },
     attachments: [
       {
         file: { type: mongoose.Schema.Types.ObjectId, ref: "uploads.files" },
