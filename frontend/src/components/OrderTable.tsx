@@ -36,6 +36,7 @@ export default function OrderTable({
       <TableHeader>
         <TableColumn>標題</TableColumn>
         <TableColumn>品管工程師</TableColumn>
+        <TableColumn>Email</TableColumn>
         {action === 'worker-view' ? (
           <TableColumn>廠區</TableColumn>
         ) : (
@@ -48,7 +49,8 @@ export default function OrderTable({
         {orders.map((order) => (
           <TableRow key={order._id} onClick={() => onRowAction(order._id)}>
             <TableCell>{order.title}</TableCell>
-            <TableCell>{order.creator}</TableCell>
+            <TableCell>{order.creator.split(' ')[1]}</TableCell>
+            <TableCell>{order.creator.split(' ')[0]}</TableCell>
             {action === 'worker-view' ? (
               <TableCell>{order.fab_name}</TableCell>
             ) : (
