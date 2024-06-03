@@ -7,7 +7,8 @@ import {
 } from '@nextui-org/modal';
 import { Order } from '@/types';
 import { Divider, Select, SelectItem, Chip } from '@nextui-org/react';
-import {useState } from 'react';
+import { useState } from 'react';
+import { useCookies } from 'next-client-cookies';
 import { Clip, Fab, ID, Lab, Priority, Status, Upload } from '../Icons';
 import StatusChip from './StatusChip';
 import PriorityChip from './PriorityChip';
@@ -31,7 +32,36 @@ export default function RowModal({
   setAction: (action: Action) => void;
   onClose: () => void;
 }) {
+  const cookies = useCookies();
   const [priority, setPriority] = useState(activeOrder.priority);
+  const accessToken = cookies.get('accessToken');
+
+  const downloadAttachment = async (fileId: string, filename: string) => {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/orders/files/${fileId}`;
+
+    try {
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        referrerPolicy: 'strict-origin-when-cross-origin',
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const blob = await response.blob();
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Error downloading attachment:', error);
+    }
+  };
 
   return (
     <Modal size="lg" isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -130,16 +160,21 @@ export default function RowModal({
                 </Chip>
               ) : (
                 activeOrder.attachments.map((attachment: any) => (
-                  <a
+                  <Chip
                     key={attachment.file._id}
-                    href={`${process.env.NEXT_PUBLIC_API_URL}/orders/files/${attachment.file._id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    startContent={<Clip />}
+                    variant="flat"
+                    radius="sm"
+                    onClick={() =>
+                      downloadAttachment(
+                        attachment.file._id,
+                        attachment.file.filename,
+                      )
+                    }
+                    style={{ cursor: 'pointer' }}
                   >
-                    <Chip startContent={<Clip />} variant="flat" radius="sm">
-                      {attachment.file.filename}
-                    </Chip>
-                  </a>
+                    encodeURIComponent{attachment.file.filename}
+                  </Chip>
                 ))
               )}
             </Property>
