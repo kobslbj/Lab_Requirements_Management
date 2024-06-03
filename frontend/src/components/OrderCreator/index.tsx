@@ -16,7 +16,7 @@ import {
   SelectItem,
   Textarea,
 } from '@nextui-org/react';
-import { useState, useTransition } from 'react';
+import { useState} from 'react';
 import { createOrder } from '@/actions/order';
 import { Lab, Priority, Upload } from '../Icons';
 import Property from '../RowModal/Property';
