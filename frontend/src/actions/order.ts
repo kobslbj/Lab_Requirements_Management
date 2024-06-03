@@ -4,22 +4,10 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
 export async function createOrder(
-  title: string,
-  description: string,
-  lab: string,
-  priority: number,
-  file: File | null,
+  formData: FormData
 ) {
-  const accessToken = cookies().get('accessToken')!.value;
+  const accessToken = cookies().get('accessToken')!.value
 
-  const formData = new FormData();
-  formData.append('title', title);
-  formData.append('description', description);
-  formData.append('lab_name', lab);
-  formData.append('priority', priority.toString());
-  if (file) {
-    formData.append('file', file);
-  }
   const res = await fetch(`${process.env.API_URL}/orders`, {
     method: 'POST',
     headers: {
@@ -29,7 +17,9 @@ export async function createOrder(
   });
 
   if (!res.ok) {
-    throw new Error('Failed to create order');
+    const errorText = await res.text();
+    console.error(`Failed to create order. Status: ${res.status}. Response: ${errorText}`);
+    throw new Error(`Failed to create order. Status: ${res.status}. Response: ${errorText}`);
   }
 
   revalidatePath('/');

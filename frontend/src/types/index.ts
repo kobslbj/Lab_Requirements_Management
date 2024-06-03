@@ -15,6 +15,7 @@ export type LabStaff = {
 };
 
 export type Order = {
+  attachments: any;
   _id: string;
   title: string;
   description: string;
