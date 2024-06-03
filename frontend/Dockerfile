@@ -1,18 +1,38 @@
-FROM docker.io/library/node:21-alpine3.18 AS BUILDER
-
+FROM node:18-alpine AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+COPY package.json package-lock.json ./
+RUN  npm install --production
+
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm install
+
+ENV NEXT_TELEMETRY_DISABLED 1
+
 RUN npm run build
 
-CMD ["nginx", "-g", "daemon off;"]
+FROM node:18-alpine AS runner
+WORKDIR /app
 
-FROM nginx:stable-alpine as runner
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+COPY .env .env
+COPY .env.local .env.local
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT 3000
+
+CMD ["npm", "start"]

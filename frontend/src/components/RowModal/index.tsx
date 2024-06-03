@@ -7,9 +7,8 @@ import {
 } from '@nextui-org/modal';
 import { Order } from '@/types';
 import { Divider, Select, SelectItem, Chip } from '@nextui-org/react';
-import { Key, useState } from 'react';
+import {useState } from 'react';
 import { Clip, Fab, ID, Lab, Priority, Status, Upload } from '../Icons';
-import { Link } from '@nextui-org/react';
 import StatusChip from './StatusChip';
 import PriorityChip from './PriorityChip';
 import Property from './Property';
@@ -130,9 +129,9 @@ export default function RowModal({
                   無附件
                 </Chip>
               ) : (
-                activeOrder.attachments.map((attachment: any, index: any) => (
+                activeOrder.attachments.map((attachment: any) => (
                   <a
-                    key={index}
+                    key={attachment.file._id}
                     href={`${process.env.NEXT_PUBLIC_API_URL}/orders/files/${attachment.file._id}`}
                     target="_blank"
                     rel="noopener noreferrer"
