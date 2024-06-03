@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const orderRoute = require("./routes/order.js");
 const staffRoute = require("./routes/staff.js");
 const fileUpload = require("express-fileupload");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const app = express();
 
@@ -19,14 +22,15 @@ app.use(
 app.use("/api/orders", orderRoute);
 app.use("/api/staffs", staffRoute);
 
-const mongoURI = "mongodb://localhost:27017/lab_requirement_db";
+const mongoURI = process.env.MONGO_URI;
+const port = process.env.PORT || 8888;
 
 mongoose
   .connect(mongoURI)
   .then(() => {
     console.log("Connected to database!");
-    app.listen(3000, () => {
-      console.log("Server is running on port 3000");
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
     });
   })
   .catch(() => {
