@@ -3,30 +3,7 @@ const { GridFSBucket } = require("mongodb");
 const crypto = require("crypto");
 const { Order, File } = require("../models/order.js");
 
-// const getOrders = async (user) => {
-//   try {
-//     let query = {};
-//     if (user.department_name === "Fab A" || user.department_name === "Fab B" || user.department_name === "Fab C") {
-//       query = { creator: user.email };
-//     }
-//     else {
-//       query = { lab_name: user.department_name };
-//     }
-//     let orders = await Order.find(query).populate("attachments.file");
-//     console.log("orders", orders);
-//     orders.sort((a, b) => b.createdAt - a.createdAt);
-//     orders.sort((a, b) => a.priority - b.priority);
-//     orders.sort((a, b) => (a.is_completed === b.is_completed)? 0 : a.is_completed? 1 : -1);
-
-//     return orders;
-//   } catch (error) {
-//     throw new Error(error.message);
-//   }
-// };
-
 const getOrders = async (filters = {}, user) => {
-  console.log("user", user);
-  console.log("filters", filters);
   try {
     let query = {};
     if (
@@ -34,14 +11,13 @@ const getOrders = async (filters = {}, user) => {
       user.department_name === "Fab B" ||
       user.department_name === "Fab C"
     ) {
-      query.creator = user.email;
+      query = { creator: user.email + " " + user.name };
     } else {
       query.lab_name = user.department_name;
     }
 
     // merge additional filters
     query = { ...query, ...filters };
-    console.log("query", query);
 
     // fetch orders from database
     let orders = await Order.find(query).populate("attachments.file");
@@ -209,14 +185,9 @@ const markOrderAsCompleted = async (orderId, user) => {
 };
 
 const getFileStream = async (fileId) => {
-  try {
-    const bucket = new GridFSBucket(mongoose.connection.db, {
-      bucketName: 'uploads'
-    });
-    return bucket.openDownloadStream(new mongoose.Types.ObjectId(fileId));
-  } catch (error) {
-    throw new Error('File could not be retrieved: ' + error.message);
-  }
+  const db = mongoose.connection.db;
+  const bucket = new GridFSBucket(db, { bucketName: "uploads" });
+  return bucket.openDownloadStream(fileId);
 };
 
 module.exports = {

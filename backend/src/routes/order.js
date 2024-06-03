@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const {
   getOrders,
   createOrder,
@@ -9,27 +10,33 @@ const {
 const authenticateToken = require("../middleware/authenticateToken");
 const router = express.Router();
 
-
-router.get('/files/:fileId', async (req, res) => {
+router.get("/files/:fileId", async (req, res) => {
   try {
-    const downloadStream = await getFileStream(req.params.fileId);
+    const fileId = new mongoose.Types.ObjectId(req.params.fileId);
+    console.log(`Fetching file with ID: ${fileId}`);
 
-    downloadStream.on('data', (chunk) => {
+    const downloadStream = await getFileStream(fileId);
+
+    res.setHeader("Content-Type", "application/pdf");
+
+    downloadStream.on("data", (chunk) => {
       res.write(chunk);
     });
 
-    downloadStream.on('error', () => {
+    downloadStream.on("error", (err) => {
+      console.error("Download stream error:", err);
       res.sendStatus(404);
     });
 
-    downloadStream.on('end', () => {
+    downloadStream.on("end", () => {
       res.end();
     });
   } catch (error) {
-    console.error('Error fetching file:', error);
-    res.status(500).send('Error fetching file: ' + error.message);
+    console.error("Error fetching file:", error);
+    res.status(500).send("Error fetching file: " + error.message);
   }
 });
+
 // get all orders
 router.get("/", authenticateToken, async (req, res) => {
   try {

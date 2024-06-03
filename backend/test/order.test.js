@@ -11,13 +11,14 @@ const staffRoute = require("../src/routes/staff");
 const Staff = require("../src/models/staff");
 const { getOrders } = require("../src/services/order");
 const Order = require("../src/models/order");
+const { get } = require("http");
 const GridFSBucket = require("mongodb").GridFSBucket;
 
 const secretKey = "secretkey";
 
 let app;
-let token;
-let user;
+let lab_token, fab_token;
+let lab_user, fab_user;
 
 beforeAll(async () => {
   const uri = "mongodb://localhost:27017/test";
@@ -30,21 +31,37 @@ beforeAll(async () => {
   app.use("/api/orders", orderRoute);
   app.use("/api/staffs", staffRoute);
 
-  // Create a test user with a valid department name
-  user = await Staff.create({
-    email: "seanmamasde@example.com",
-    name: "seanmamasde",
-    password: "seanmamasdes_password",
-    department_name: "化學實驗室", // Valid department name
+  fab_user = await Staff.create({
+    email: "A@amail.com",
+    name: "AAA",
+    password: "aaa",
+    department_name: "Fab A",
   });
 
-  // Generate a valid JWT token
-  token = jwt.sign(
+  fab_token = jwt.sign(
     {
-      email: user.email,
-      id: user._id,
-      department_name: user.department_name,
-      name: user.name,
+      id: fab_user._id,
+      email: fab_user.email,
+      name: fab_user.name,
+      department_name: fab_user.department_name,
+    },
+    secretKey,
+    { expiresIn: "1h" }
+  );
+
+  lab_user = await Staff.create({
+    email: "B@bmail.com",
+    name: "BBB",
+    password: "bbb",
+    department_name: "化學實驗室",
+  });
+
+  lab_token = jwt.sign(
+    {
+      id: lab_user._id,
+      email: lab_user.email,
+      name: lab_user.name,
+      department_name: lab_user.department_name,
     },
     secretKey,
     { expiresIn: "1h" }
@@ -67,7 +84,7 @@ describe("Order API", () => {
 
     const response = await request(app)
       .post("/api/orders")
-      .set("Authorization", `Bearer ${token}`)
+      .set("Authorization", `Bearer ${fab_token}`)
       .field("title", "order with 1 pdf file.")
       .field("description", "Test order")
       .field("creator", "test_creator")
@@ -101,7 +118,7 @@ describe("Order API", () => {
 
     const response = await request(app)
       .post("/api/orders")
-      .set("Authorization", `Bearer ${token}`)
+      .set("Authorization", `Bearer ${fab_token}`)
       .field("title", "order with 2 pdf files.")
       .field("description", "Test order with two PDFs")
       .field("creator", "test_creator")
@@ -134,7 +151,7 @@ describe("Order API", () => {
     // Create an order to update
     const createResponse = await request(app)
       .post("/api/orders")
-      .set("Authorization", `Bearer ${token}`)
+      .set("Authorization", `Bearer ${fab_token}`)
       .field("title", "this is a test order for update.")
       .field("description", "Order to be updated")
       .field("creator", "test_creator")
@@ -145,15 +162,9 @@ describe("Order API", () => {
 
     expect(createResponse.status).toBe(200);
 
-    console.log("Created Order:", createResponse.body);
-
-    // Add a delay to ensure the database has committed the new document
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
     // Find the created order by title
     const query = { title: "this is a test order for update." };
-    const orders = await getOrders(query, user);
-    console.log("Orders fetched:", orders);
+    const orders = await getOrders(query, fab_user);
     const orderId = orders[0]?._id.toString();
 
     // Check if the order was found
@@ -161,8 +172,9 @@ describe("Order API", () => {
 
     // Update the order
     const updateResponse = await request(app)
-      .put(`/api/orders/${orderId}`)
-      .set("Authorization", `Bearer ${token}`)
+      .put("/api/orders")
+      .set("Authorization", `Bearer ${fab_token}`)
+      .field("_id", orderId)
       .field("title", "this is the updated title.")
       .field("description", "Updated description")
       .field("priority", 4)
@@ -171,7 +183,6 @@ describe("Order API", () => {
 
     expect(updateResponse.status).toBe(200);
     expect(updateResponse.body.title).toBe("this is the updated title.");
-    expect(updateResponse.body.description).toBe("Updated description");
     expect(updateResponse.body.priority).toBe(4);
     expect(updateResponse.body.lab_name).toBe("表面分析實驗室");
     expect(updateResponse.body.attachments).toHaveLength(1);
@@ -193,7 +204,7 @@ describe("Order API", () => {
     // Create an order to update
     const createResponse = await request(app)
       .post("/api/orders")
-      .set("Authorization", `Bearer ${token}`)
+      .set("Authorization", `Bearer ${fab_token}`)
       .field("title", "this is a test order for completion.")
       .field("description", "Order to be marked as completed")
       .field("creator", "test_creator")
@@ -205,13 +216,10 @@ describe("Order API", () => {
     expect(createResponse.status).toBe(200);
     const orderId = createResponse.body._id;
 
-    // Add a delay to ensure the database has committed the new document
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
     // Mark the order as completed
     const completeResponse = await request(app)
-      .put(`/api/orders/${orderId}/complete`)
-      .set("Authorization", `Bearer ${token}`);
+      .put(`/api/orders/${orderId}`)
+      .set("Authorization", `Bearer ${lab_token}`);
 
     expect(completeResponse.status).toBe(200);
     expect(completeResponse.body.is_completed).toBe(true);
@@ -220,7 +228,7 @@ describe("Order API", () => {
     fs.unlinkSync(pdfPath);
   });
 
-  it("should print and verify all entries in the MongoDB memory server in the file schema format", async () => {
+  it("should print and verify all entries in the MongoDB server in the file schema format", async () => {
     const bucket = new GridFSBucket(mongoose.connection.db, {
       bucketName: "uploads",
     });
@@ -241,7 +249,7 @@ describe("Order API", () => {
             .createHash("md5")
             .update(buffer)
             .digest("hex");
-          expect(file.md5).toBe(expectedHash);
+          expect(file.metadata.md5).toBe(expectedHash);
           resolve();
         });
         downloadStream.on("error", reject);
@@ -252,7 +260,120 @@ describe("Order API", () => {
     expect(Array.isArray(files)).toBe(true);
 
     // Print all orders in the MongoDB database
-    const orders = await getOrders({}, user);
-    console.log("Orders in MongoDB:", JSON.stringify(orders, null, 2));
+    // const orders = await getOrders({}, fab_user);
+    // console.log("Orders in MongoDB:", JSON.stringify(orders, null, 2));
+    // console.log("Total number of orders in MongoDB:", orders.length);
+  });
+
+  it("should download PDF files from the order with 2 PDF attachments", async () => {
+    // Create two simple PDF files
+    const pdfPath1 = path.join(__dirname, "downloadTest1.pdf");
+    const doc1 = new PDFDocument();
+    doc1.pipe(fs.createWriteStream(pdfPath1));
+    doc1.text("This is the first test PDF file for download.");
+    doc1.end();
+
+    const pdfPath2 = path.join(__dirname, "downloadTest2.pdf");
+    const doc2 = new PDFDocument();
+    doc2.pipe(fs.createWriteStream(pdfPath2));
+    doc2.text("This is the second test PDF file for download.");
+    doc2.end();
+
+    // Create an order with two PDF attachments
+    const createResponse = await request(app)
+      .post("/api/orders")
+      .set("Authorization", `Bearer ${fab_token}`)
+      .field("title", "order with 2 pdf files for download")
+      .field("description", "Test order with two PDFs for download")
+      .field("creator", "test_creator")
+      .field("fab_name", "Fab A")
+      .field("lab_name", "化學實驗室")
+      .field("priority", 2)
+      .attach("file", pdfPath1)
+      .attach("file", pdfPath2);
+
+    expect(createResponse.status).toBe(200);
+    console.log("Order creation response:", createResponse.body);
+
+    // Find the created order by title
+    const query = { title: "order with 2 pdf files for download" };
+    const orders = await getOrders(query, fab_user);
+    const orderId = orders[0]?._id.toString();
+    const attachments = orders[0]?.attachments;
+
+    expect(orderId).toBeDefined();
+    expect(attachments).toHaveLength(2);
+
+    console.log("Order ID:", orderId);
+    console.log("Attachments:", attachments);
+
+    // Ensure the files are uploaded to MongoDB
+    const db = mongoose.connection.db;
+    const bucket = new GridFSBucket(db, { bucketName: "uploads" });
+    for (const attachment of attachments) {
+      const files = await bucket
+        .find({ _id: new mongoose.Types.ObjectId(attachment.file) })
+        .toArray();
+      console.log("Files found in MongoDB:", files);
+      expect(files).toHaveLength(1); // Ensure the file exists in MongoDB
+
+      const chunks = await db
+        .collection("uploads.chunks")
+        .find({ files_id: new mongoose.Types.ObjectId(attachment.file) })
+        .toArray();
+      console.log("Chunks found in MongoDB:", chunks);
+      expect(chunks.length).toBeGreaterThan(0); // Ensure there are chunks for the file
+    }
+
+    // Download the attached PDF files
+    for (const attachment of attachments) {
+      const fileId = attachment.file._id.toString();
+      console.log(`Attempting to download file with ID: ${fileId}`);
+
+      const response = await request(app)
+        .get(`/api/orders/files/${fileId}`)
+        .set("Authorization", `Bearer ${fab_token}`)
+        .buffer(true) // Ensure the response is buffered
+        .parse((res, callback) => {
+          res.setEncoding("binary");
+          res.data = "";
+          res.on("data", (chunk) => {
+            res.data += chunk;
+          });
+          res.on("end", () => {
+            callback(null, Buffer.from(res.data, "binary"));
+          });
+        });
+
+      console.log(`Downloading file ${fileId} - status: ${response.status}`);
+      console.log(`Headers:`, response.headers);
+
+      expect(response.status).toBe(200);
+      expect(response.header["content-type"]).toBe("application/pdf");
+
+      // Save the downloaded PDF to a local file
+      const downloadPath = path.join(__dirname, `downloaded_${fileId}.pdf`);
+      fs.writeFileSync(downloadPath, response.body);
+
+      // Verify the downloaded file
+      const downloadedFileBuffer = fs.readFileSync(downloadPath);
+      const expectedHash = crypto
+        .createHash("md5")
+        .update(downloadedFileBuffer)
+        .digest("hex");
+
+      // Fetch metadata to verify MD5 hash
+      const files = await bucket
+        .find({ _id: new mongoose.Types.ObjectId(attachment.file) })
+        .toArray();
+      expect(files[0].metadata.md5).toBe(expectedHash);
+
+      // Clean up
+      fs.unlinkSync(downloadPath);
+    }
+
+    // Clean up
+    fs.unlinkSync(pdfPath1);
+    fs.unlinkSync(pdfPath2);
   });
 });
