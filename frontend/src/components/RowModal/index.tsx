@@ -173,7 +173,7 @@ export default function RowModal({
                     }
                     style={{ cursor: 'pointer' }}
                   >
-                    encodeURIComponent{attachment.file.filename}
+                    {attachment.file.filename}
                   </Chip>
                 ))
               )}
