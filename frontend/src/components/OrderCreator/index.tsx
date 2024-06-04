@@ -100,7 +100,7 @@ export default function OrderCreator() {
                     }}
                   >
                     <SelectItem key="化學實驗室">化學實驗室</SelectItem>
-                    <SelectItem key="表面實驗室">表面實驗室</SelectItem>
+                    <SelectItem key="表面分析實驗室">表面分析實驗室</SelectItem>
                     <SelectItem key="成分分析實驗室">成分分析實驗室</SelectItem>
                   </Select>
                 </Property>
