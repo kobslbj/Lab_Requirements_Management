@@ -38,13 +38,11 @@ export default function RowModal({
 
   const downloadAttachment = async (fileId: string, filename: string) => {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/orders/files/${fileId}`;
-
     try {
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        referrerPolicy: 'strict-origin-when-cross-origin',
       });
 
       if (!response.ok) {
