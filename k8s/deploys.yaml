@@ -92,6 +92,11 @@ spec:
           image: ghcr.io/kobslbj/lab_requirements_management/frontend:latest
           ports:
             - containerPort: 3000
+          env:
+            - name: NEXT_PUBLIC_API_URL
+              value: "http://35.232.205.163:5000/api"
+            - name: API_URL
+              value: "http://backend-clusterip:5000/api"
           resources:
             requests:
               cpu: 10m
