@@ -6,21 +6,25 @@ import { Order } from '@/types';
 import RowModal from './RowModal';
 import OrderTable from './OrderTable';
 import Filter from './Filter';
+import OrderCreator from './OrderCreator';
+
+export type Action = 'admin-view' | 'admin-edit' | 'worker-view';
 
 export default function TableWithModal({
   orders,
-  actionType,
+  action: defaultAction,
 }: {
   orders: Order[];
-  actionType: 'admin' | 'worker';
+  action: Action;
 }) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [activeOrder, setActiveOrder] = useState<Order>();
   const [status, setStatus] = useState<boolean>();
   const [priority, setPriority] = useState<number>();
+  const [action, setAction] = useState<Action>(defaultAction);
 
   const onRowAction = (id: Key) => {
-    const order = orders.find((o) => o.id === id);
+    const order = orders.find((o) => o._id === id);
     setActiveOrder(order);
     onOpen();
   };
@@ -47,21 +51,28 @@ export default function TableWithModal({
 
   return (
     <>
-      <Filter
-        onStatusChange={handleStatusChange}
-        onPriorityChange={handlePriorityChange}
-      />
+      <div className="flex justify-between">
+        <Filter
+          onStatusChange={handleStatusChange}
+          onPriorityChange={handlePriorityChange}
+        />
+        {action !== 'worker-view' && <OrderCreator />}
+      </div>
       <OrderTable
         orders={filteredOrders}
         onRowAction={onRowAction}
-        actionType={actionType}
+        action={action}
       />
-      <RowModal
-        activeOrder={activeOrder}
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        actionType={actionType}
-      />
+      {activeOrder !== undefined && (
+        <RowModal
+          activeOrder={activeOrder}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          action={action}
+          setAction={setAction}
+          onClose={onClose}
+        />
+      )}
     </>
   );
 }

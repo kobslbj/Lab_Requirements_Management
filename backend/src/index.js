@@ -1,35 +1,37 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const Order = require("./models/order.js");
-const Staff = require("./models/lab_staff.js");
-const QAEngineer = require("./models/qa_engineer.js");
 const orderRoute = require("./routes/order.js");
-const staffRoute = require("./routes/lab_staff.js");
-const qaEngineerRoute = require("./routes/qa_engineer.js");
+const staffRoute = require("./routes/staff.js");
+const fileUpload = require("express-fileupload");
+const dotenv = require("dotenv");
+const cors = require("cors");
+
+dotenv.config();
 
 const app = express();
-
-// middleware
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
-
+app.use(express.urlencoded({ extended: false }));
+app.use(
+  fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
+    useTempFiles: false,
+    tempFileDir: "/tmp/",
+  })
+);
 
 app.use("/api/orders", orderRoute);
 app.use("/api/staffs", staffRoute);
-app.use("/api/qa_engineers", qaEngineerRoute);
 
+const mongoURI = process.env.MONGO_URI;
+const port = process.env.BACKEND_PORT || 8888;
 
 mongoose
-  .connect(
-    "mongodb://localhost:27017/lab_requirement_db", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(mongoURI)
   .then(() => {
     console.log("Connected to database!");
-    app.listen(3000, () => {
-      console.log("Server is running on port 3000");
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
     });
   })
   .catch(() => {

@@ -13,9 +13,10 @@ function Filter({
   return (
     <div className="flex w-full flex-wrap gap-4 md:flex-nowrap">
       <Select
+        size="sm"
         label="優先序"
-        className="max-w-xs"
-        variant="bordered"
+        className="max-w-[10rem]"
+        variant="faded"
         onChange={(e) => {
           if (e.target.value === '') {
             onPriorityChange(undefined);
@@ -26,13 +27,16 @@ function Filter({
         }}
       >
         {priority.map((p) => (
-          <SelectItem key={p.key}>{p.label}</SelectItem>
+          <SelectItem key={p.key} variant="flat" color={p.color}>
+            {p.label}
+          </SelectItem>
         ))}
       </Select>
       <Select
+        size="sm"
         label="狀態"
-        className="max-w-xs"
-        variant="bordered"
+        className="max-w-[10rem]"
+        variant="faded"
         onChange={(e) => {
           if (e.target.value === '') {
             onStatusChange(undefined);
@@ -43,7 +47,9 @@ function Filter({
         }}
       >
         {status.map((s) => (
-          <SelectItem key={s.key}>{s.label}</SelectItem>
+          <SelectItem key={s.key} variant="flat" color={s.color}>
+            {s.label}
+          </SelectItem>
         ))}
       </Select>
     </div>

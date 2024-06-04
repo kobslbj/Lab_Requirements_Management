@@ -10,10 +10,14 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.3.6",
+    "dotenv": "^16.4.5",
     "framer-motion": "^11.2.6",
+    "js-cookie": "^3.0.5",
     "next": "14.2.3",
+    "next-client-cookies": "^1.1.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",

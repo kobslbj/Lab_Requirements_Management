@@ -11,14 +11,16 @@ import {
 import StatusChip from './RowModal/StatusChip';
 import PriorityChip from './RowModal/PriorityChip';
 
+type Action = 'admin-view' | 'admin-edit' | 'worker-view';
+
 export default function OrderTable({
   orders,
   onRowAction,
-  actionType,
+  action,
 }: {
   orders: Order[];
   onRowAction: (id: Key) => void;
-  actionType: 'admin' | 'worker';
+  action: Action;
 }) {
   return (
     <Table
@@ -27,30 +29,32 @@ export default function OrderTable({
       className="h-[70vh]"
       onRowAction={onRowAction}
       classNames={{
-        base: 'w-[60vw]',
+        base: 'w-[95vw] lg:w-[60vw]',
         tr: 'hover:bg-[#f4f4f5] transition-all cursor-pointer',
       }}
     >
       <TableHeader>
         <TableColumn>標題</TableColumn>
         <TableColumn>品管工程師</TableColumn>
-        {actionType === 'admin' ? (
-          <TableColumn>實驗室</TableColumn>
-        ) : (
+        <TableColumn>Email</TableColumn>
+        {action === 'worker-view' ? (
           <TableColumn>廠區</TableColumn>
+        ) : (
+          <TableColumn>實驗室</TableColumn>
         )}
         <TableColumn>優先序</TableColumn>
         <TableColumn>狀態</TableColumn>
       </TableHeader>
       <TableBody>
         {orders.map((order) => (
-          <TableRow key={order.id} onClick={() => onRowAction(order.id)}>
+          <TableRow key={order._id} onClick={() => onRowAction(order._id)}>
             <TableCell>{order.title}</TableCell>
-            <TableCell>{order.admin.name}</TableCell>
-            {actionType === 'admin' ? (
-              <TableCell>{order.lab?.name}</TableCell>
+            <TableCell>{order.creator.split(' ')[1]}</TableCell>
+            <TableCell>{order.creator.split(' ')[0]}</TableCell>
+            {action === 'worker-view' ? (
+              <TableCell>{order.fab_name}</TableCell>
             ) : (
-              <TableCell>{order.fab?.name}</TableCell>
+              <TableCell>{order.lab_name}</TableCell>
             )}
             <TableCell>
               <PriorityChip order={order} />
