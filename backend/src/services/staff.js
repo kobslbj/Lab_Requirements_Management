@@ -77,7 +77,7 @@ const signinStaff = async (req, res) => {
       position = 'Lab';
     }
 
-    return res.status(200).json({ token, position, name:staff.name });
+    return res.status(200).json({ token, position, name:staff.name, department_name:staff.department_name });
   } catch (err) {
     console.error("Error signing in staff", err);
     // console.error(err);
