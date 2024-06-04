@@ -29,4 +29,4 @@ spec:
               service:
                 name: backend-clusterip
                 port:
-                  number: 5000
+                  number: 80

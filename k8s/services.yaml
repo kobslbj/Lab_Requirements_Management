@@ -16,15 +16,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-clusterip
+  name: backend
 spec:
-  type: NodePort
-  ports:
-    - nodePort: 5001
-      port: 5000
-      targetPort: 5000
+  type: ClusterIP
   selector:
-    app: app-server
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
 --- 
 # Frontend
 apiVersion: v1
@@ -32,12 +32,10 @@ kind: Service
 metadata:
   name: frontend-clusterip
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: frontend
   ports:
-    - nodePort: 80
-      port: 3000
+    - protocol: TCP
+      port: 80
       targetPort: 3000
-  selector:
-    app: frontend
