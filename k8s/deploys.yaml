@@ -99,7 +99,7 @@ spec:
             limits:
               cpu: 200m
               memory: 200Mi
-            env:
+          env:
             - name: NEXT_PUBLIC_API_URL
               value: "http://34.83.72.234:80/api"
             - name: API_URL
