@@ -13,7 +13,7 @@ export default async function AdminPage() {
   const data: Order[] = await res.json();
 
   const name = cookies().get('name')!.value;
-  const position = cookies().get('position')!.value;
+  const position = cookies().get('departmentName')!.value;
 
   console.log(data);
   return (
