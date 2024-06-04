@@ -101,6 +101,6 @@ spec:
               memory: 200Mi
           env:
             - name: NEXT_PUBLIC_API_URL
-              value: "http://34.83.72.234:80/api"
+              value: "http://34.83.72.234:30007/api"
             - name: API_URL
               value: "http://backend-clusterip:5000/api"
