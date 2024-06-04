@@ -8,8 +8,7 @@ services:
       - ./db:/var/lib/mongo
 
   backend:
-    build:
-      context: backend
+    image: ghcr.io/kobslbj/lab_requirements_management/backend:latest
     ports:
       - "5000:5000"
     environment:
@@ -20,8 +19,7 @@ services:
       - db
 
   frontend:
-    build: 
-      context: frontend
+    image: ghcr.io/kobslbj/lab_requirements_management/frontend:latest
     ports:
       - "3000:3000"
     env_file:
