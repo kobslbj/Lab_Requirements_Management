@@ -22,7 +22,10 @@ services:
     image: ghcr.io/kobslbj/lab_requirements_management/frontend:latest
     ports:
       - "3000:3000"
-    env_file:
-      - frontend/.env
+    environment:
+        - name: NEXT_PUBLIC_API_URL
+          value: "http://34.83.72.234:80/api"
+        - name: API_URL
+          value: "http://backend:80/api"
     depends_on:
       - backend
