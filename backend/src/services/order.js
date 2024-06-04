@@ -39,7 +39,7 @@ const createOrder = async (orderData, creator, files) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    orderData.description = "\n" + orderData.description;
+    orderData.description = orderData.description + "\n";
     if (files && files.file) {
       const attachments = [];
       const bucket = new GridFSBucket(mongoose.connection.db, {
