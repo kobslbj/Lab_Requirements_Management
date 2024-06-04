@@ -21,6 +21,8 @@ export async function login(formData: FormData) {
     const result = await response.json();
     cookies().set('accessToken', result.token);
     cookies().set('position', result.position);
+    cookies().set('name', result.name);
+    cookies().set('departmentName', result.department_name);
   } catch (error) {
     console.error('Error during user validation:', error);
     return;
@@ -32,5 +34,7 @@ export async function login(formData: FormData) {
 export async function logOut() {
   cookies().delete('accessToken');
   cookies().delete('position');
+  cookies().delete('name');
+  cookies().delete('departmentName');
   redirect('/login');
 }
