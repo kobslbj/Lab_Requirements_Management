@@ -29,7 +29,7 @@ export default function OrderTable({
       className="h-[70vh]"
       onRowAction={onRowAction}
       classNames={{
-        base: 'w-[60vw]',
+        base: 'w-[95vw] lg:w-[60vw]',
         tr: 'hover:bg-[#f4f4f5] transition-all cursor-pointer',
       }}
     >
