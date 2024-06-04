@@ -63,10 +63,10 @@ spec:
               cpu: 200m
               memory: 200Mi
           ports:
-            - containerPort: 5000
+            - containerPort: 80
           env:
             - name: BACKEND_PORT
-              value: "5000"
+              value: "80"
             - name: MONGO_URI
               value: "mongodb://db-clusterip:27017/lab_requirement_db"
             - name: JWT_KEY
@@ -103,4 +103,4 @@ spec:
             - name: NEXT_PUBLIC_API_URL
               value: "http://34.83.72.234:80/api"
             - name: API_URL
-              value: "http://backend-clusterip:5000/api"
+              value: "http://backend-clusterip:80/api"
