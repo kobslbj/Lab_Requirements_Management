@@ -11,6 +11,10 @@ export default async function AdminPage() {
     },
   });
   const data: Order[] = await res.json();
+
+  const name = cookies().get('name')!.value;
+  const position = cookies().get('position')!.value;
+
   console.log(data);
   return (
     <div className="flex h-screen flex-col items-center justify-center">
@@ -18,7 +22,7 @@ export default async function AdminPage() {
         <div className="flex items-center justify-between">
           <div className="text-3xl font-bold">委託單列表</div>
           <div className="flex gap-5">
-            <AvatarButton name="Justin" position="Lab A" />
+            <AvatarButton name={name} position={position} />
           </div>
         </div>
         <TableWithModal orders={data} action="admin-view" />
