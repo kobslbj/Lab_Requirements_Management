@@ -1,7 +1,7 @@
 const Staff = require("../models/staff.js");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const secretKey = 'secretkey';
+const secretKey = process.env.JWT_KEY || 'secretkey';
 
 const getStaffs = async (req, res) => {
   try {
