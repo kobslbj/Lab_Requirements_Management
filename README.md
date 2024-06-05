@@ -15,7 +15,12 @@
   - TypeScript
 - Backend: Express.js
 - Database: MongoDB
-- DevOps: Docker
+- Monitor:
+  - NetData
+  - Uptime kuma
+- DevOps:
+  - Docker
+  - K8S
 
 ## Create mongo container
 
@@ -24,7 +29,7 @@ docker run --name my-mongodb -p 27017:27017 -d mongo
 ```
 
 ## System Architecture
-![cloud drawio (3)](https://github.com/kobslbj/Lab_Requirements_Management/assets/84427519/a4bbd0e6-953f-4897-82c0-9d38ee9e37e0)
+![cloud-第 1 页 drawio (3)](https://github.com/kobslbj/Lab_Requirements_Management/assets/84427519/69a7e620-5372-4d7b-a0db-3915fcf3421c)
 
 
 
