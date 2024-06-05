@@ -3,8 +3,8 @@
 <div align="center">
   
   <h1>Lab Requirements Management</h1>
-  <img src="https://github.com/kobslbj/Lab_Requirements_Management/assets/84427519/a1093396-d443-4687-932a-9ee7a3bac52f" width="75%">
-  
+  <img src="https://github.com/kobslbj/Lab_Requirements_Management/assets/74842863/3b8d1e6a-7179-4ca7-8a2b-b3fbb6dd8104" width="75%">
+
 </div>
 
 ## Tech Stack
