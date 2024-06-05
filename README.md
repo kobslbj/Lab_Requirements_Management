@@ -29,7 +29,8 @@ docker run --name my-mongodb -p 27017:27017 -d mongo
 ```
 
 ## System Architecture
-![cloud-第 1 页 drawio (3)](https://github.com/kobslbj/Lab_Requirements_Management/assets/84427519/69a7e620-5372-4d7b-a0db-3915fcf3421c)
+![cloudnatine](https://github.com/kobslbj/Lab_Requirements_Management/assets/84427519/e3f63a5e-edd2-45a1-8912-5a1d130930cf)
+
 
 
 
